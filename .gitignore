@@ -1,0 +1,28 @@
+# Local work directories
+/work/
+/outputs/
+
+# Python environments and caches
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache/
+
+# Node dependencies
+**/node_modules/
+
+# Local configuration and secrets
+*.local
+.env
+.env.*
+!*.env.example
+
+# Generated scholar-slides project artifacts
+scholar-slides/runtime/scholar-slides-analysis/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

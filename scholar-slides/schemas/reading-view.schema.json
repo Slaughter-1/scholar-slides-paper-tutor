@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.openai.com/schemas/scholar-slides/reading-view.schema.json",
+  "title": "Scholar Slides Reading View",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "paper_identity",
+    "source_bindings",
+    "language",
+    "paper_type",
+    "overview",
+    "mechanism_steps",
+    "argument_chain",
+    "decisive_evidence",
+    "terms",
+    "takeaways"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "paper_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "source_pdf_sha256"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "source_pdf_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "language": {"enum": ["zh-CN", "en-US"]},
+    "paper_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reason"],
+      "properties": {
+        "kind": {"enum": ["benchmark", "method", "system", "theory", "empirical", "mixed"]},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "overview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["problem", "gap", "approach", "insight", "findings", "boundary"],
+      "properties": {
+        "problem": {"$ref": "#/$defs/record"},
+        "gap": {"$ref": "#/$defs/record"},
+        "approach": {"$ref": "#/$defs/record"},
+        "insight": {"$ref": "#/$defs/record"},
+        "findings": {"$ref": "#/$defs/record"},
+        "boundary": {"$ref": "#/$defs/record"}
+      }
+    },
+    "mechanism_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/mechanismStep"}
+    },
+    "argument_chain": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/argumentNode"}
+    },
+    "decisive_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/evidenceBlock"}
+    },
+    "terms": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/term"}
+    },
+    "takeaways": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/takeaway"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "claimType": {"enum": ["paper_fact", "explanation", "analysis"]},
+    "availability": {"enum": ["supported", "not_reported", "unverifiable"]},
+    "evidenceRefs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["content", "claim_type", "availability", "evidence_refs"],
+      "properties": {
+        "content": {"type": "string", "minLength": 1},
+        "claim_type": {"$ref": "#/$defs/claimType"},
+        "availability": {"$ref": "#/$defs/availability"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+        "locator": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"claim_type": {"const": "paper_fact"}, "availability": {"const": "supported"}}},
+          "then": {"properties": {"evidence_refs": {"minItems": 1}}}
+        }
+      ]
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "mechanismStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "purpose", "input", "output", "necessity", "claim_type", "availability", "evidence_refs"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "purpose": {"type": "string", "minLength": 1},
+        "input": {"type": "string", "minLength": 1},
+        "output": {"type": "string", "minLength": 1},
+        "necessity": {"type": "string", "minLength": 1},
+        "claim_type": {"$ref": "#/$defs/claimType"},
+        "availability": {"$ref": "#/$defs/availability"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "argumentNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "relation", "claim_type", "availability", "evidence_refs"],
+      "properties": {
+        "node": {"type": "string", "minLength": 1},
+        "relation": {"type": "string", "minLength": 1},
+        "claim_type": {"$ref": "#/$defs/claimType"},
+        "availability": {"$ref": "#/$defs/availability"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "evidenceBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "comparison", "metric", "result", "can_support", "cannot_support", "claim_type", "availability", "evidence_refs"],
+      "properties": {
+        "question": {"type": "string", "minLength": 1},
+        "comparison": {"type": "string", "minLength": 1},
+        "metric": {"type": "string", "minLength": 1},
+        "result": {"type": "string", "minLength": 1},
+        "can_support": {"type": "string", "minLength": 1},
+        "cannot_support": {"type": "string", "minLength": 1},
+        "claim_type": {"$ref": "#/$defs/claimType"},
+        "availability": {"$ref": "#/$defs/availability"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "term": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["term", "plain", "role", "confusions", "claim_type", "availability", "evidence_refs"],
+      "properties": {
+        "term": {"type": "string", "minLength": 1},
+        "plain": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "confusions": {"type": "string", "minLength": 1},
+        "claim_type": {"$ref": "#/$defs/claimType"},
+        "availability": {"$ref": "#/$defs/availability"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "takeaway": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "content", "claim_type", "availability", "evidence_refs"],
+      "properties": {
+        "kind": {"enum": ["author_contribution", "explicit_limitation", "reader_analysis", "research_question"]},
+        "content": {"type": "string", "minLength": 1},
+        "claim_type": {"$ref": "#/$defs/claimType"},
+        "availability": {"$ref": "#/$defs/availability"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    }
+  }
+}
