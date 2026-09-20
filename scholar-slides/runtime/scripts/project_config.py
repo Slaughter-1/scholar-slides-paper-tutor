@@ -310,7 +310,7 @@ def _check_write_access() -> DoctorCheck:
     return DoctorCheck("write access", "PASS", "Skill directory is writable.", "")
 
 
-def doctor() -> list[DoctorCheck]:
+def doctor(*, require_cjk: bool = False) -> list[DoctorCheck]:
     """Return portable diagnostics. This function only observes the environment."""
     checks: list[DoctorCheck] = []
     checks.append(DoctorCheck("Python", "PASS", f"Python {sys.version_info.major}.{sys.version_info.minor} is available.", "") if sys.version_info >= (3, 11) else DoctorCheck("Python", "FAIL", "Python 3.11+ is required.", "Install Python 3.11+ and rerun the platform installer."))
@@ -352,7 +352,7 @@ def doctor() -> list[DoctorCheck]:
     fc_list = shutil.which("fc-list")
     cjk_output = _command_output([fc_list, ":lang=zh", "family"]) if fc_list else None
     cjk_ready = bool(cjk_output and cjk_output.strip())
-    checks.append(DoctorCheck("CJK font", "PASS", "A CJK-capable font is available.", "") if cjk_ready else DoctorCheck("CJK font", "WARN", "No CJK-capable font was detected.", "Install a CJK font before exporting Chinese PDF/PPTX output."))
+    checks.append(DoctorCheck("CJK font", "PASS", "A CJK-capable font is available.", "") if cjk_ready else DoctorCheck("CJK font", "FAIL" if require_cjk else "WARN", "No CJK-capable font was detected.", "Install a CJK font before Chinese PDF/PPTX export, or rerun without --require-cjk for HTML/English-only work."))
     modules = ("fitz", "PIL", "pptx")
     missing = [module for module in modules if importlib.util.find_spec(module) is None]
     checks.append(DoctorCheck("PDF/PPTX dependencies", "PASS", "PDF and PPTX Python dependencies are importable.", "") if not missing else DoctorCheck("PDF/PPTX dependencies", "FAIL", f"Missing Python dependencies: {', '.join(missing)}.", "Run the platform installer to install requirements.txt."))

@@ -1,120 +1,118 @@
 # Scholar-Slides + Paper-Tutor
 
-Evidence-grounded academic paper analysis, teaching, presentation generation, and source-bound learning maps for Codex.
+Evidence-grounded academic paper analysis, teaching, presentations, and source-bound learning maps for Codex. The current release is Scholar-Slides **0.4.0**.
 
-## What is included
+## Packages
 
-- **Scholar-Slides** (`scholar-slides/`): source ingestion, metadata and evidence extraction, reading-view generation, CKPT-1/CKPT-2 gates, slide planning, speaker notes, export, and offline QA.
-- **Paper-Tutor** (`paper-tutor/`): integrated or standalone paper teaching at quick, deep, and research depth, with explicit separation of Paper Facts, Tutor Explanation, and Tutor Analysis.
-- **Paper Learning Map** (bundled under `scholar-slides/paper-learning-map/`): source-bound map projection, formula index and KaTeX rendering, tutor-state synchronization, study state, unresolved-question tracking, and hash-bound sync receipts.
+- `scholar-slides/`: PDF/source ingestion, evidence resolver, reading view, CKPT-1 and CKPT-2 gates, slide planning, speaker notes, export, and offline QA.
+- `paper-tutor/`: integrated or standalone paper teaching at quick, deep, and research depth, with explicit Paper Fact, Tutor Explanation, and Tutor Analysis layers.
+- `scholar-slides/paper-learning-map/`: source-bound map projection, formula index and offline KaTeX rendering, tutor-state synchronization, study state, unresolved-question tracking, and hash-bound receipts.
 
-The flow is one way:
-
-```text
-paper PDF / source
-        |
-        v
-Scholar-Slides reading-view + evidence
-        |
-        v
-Paper-Tutor / Learning Map projections
-        |
-        v
-slides, notes, maps, and study state
-```
-
-Downstream outputs never write back into the source reading view, digest, or checkpoint records.
-
-## Install locally
-
-Copy `scholar-slides/` into the local Codex skill directory and `paper-tutor/` into the Paper-Tutor skill directory. Keep each paper project in its own user-selected output directory; never write project artifacts into the installed skill.
-
-Typical Windows locations are:
+The data flow is one way:
 
 ```text
-%USERPROFILE%\\.agents\\skills\\scholar-slides
-%USERPROFILE%\\.codex\\skills\\paper-tutor
+paper source -> Scholar-Slides evidence and reading view
+             -> Paper-Tutor and Learning Map projections
+             -> slides, notes, and study state
 ```
 
-The installed bundle is self-contained. Runtime commands resolve resources relative to the installed skill and do not depend on a fixed machine path.
+Downstream outputs do not write back into the source reading view, digest, or checkpoint records.
 
-## Scholar-Slides workflow
+## Install on Windows
 
-Check the runtime before a long run:
+From a checkout of this repository, run:
+
+```powershell
+.\scripts\install.ps1
+```
+
+The installer backs up existing installations, installs the packages to `%USERPROFILE%\.agents\skills\scholar-slides` and `%USERPROFILE%\.codex\skills\paper-tutor`, creates the Scholar-Slides Python environment, installs Node dependencies, and installs Playwright Chromium. Use `-SkipPlaywright` only when browser QA is not required.
+
+Projects belong in user-selected output directories, never inside an installed skill. The bundle resolves resources relative to its own installation and does not depend on a fixed machine path.
+
+## Scholar-Slides
+
+Check the installation:
 
 ```powershell
 scholar-slides --version
 scholar-slides doctor --json
 ```
 
-Build a source-bound Mode A project:
+For Chinese PDF/PPTX export, require a verified CJK font explicitly:
 
 ```powershell
-scholar-slides build --input "C:\\path\\paper.pdf" --project "C:\\path\\paper-project"
+scholar-slides doctor --json --require-cjk
 ```
 
-Prepare a CKPT-1 review input without recording approval:
+Build a source-bound project:
 
 ```powershell
-scholar-slides prepare-checkpoint --project "C:\\path\\paper-project" `
-  --checkpoint CKPT-1 --review-input "C:\\path\\review-input.json" --prepared-by Codex
+scholar-slides build --input "C:\papers\paper.pdf" --project "C:\papers\paper-project"
 ```
 
-Only an explicit user instruction can approve a checkpoint. Never infer approval from silence, an automated result, or a model-written receipt. CKPT-1 approval freezes the source-bound reviewed semantic view. A source hash change makes the review stale and requires a new checkpoint.
-
-After a confirmed CKPT-1, resume the presentation pipeline:
+Prepare CKPT-1 without recording approval:
 
 ```powershell
-scholar-slides build --project "C:\\path\\paper-project" --resume
-scholar-slides review --project "C:\\path\\paper-project"
-scholar-slides export --project "C:\\path\\paper-project" --formats html,pdf,pptx,notes
+scholar-slides prepare-checkpoint --project "C:\papers\paper-project" `
+  --checkpoint CKPT-1 --review-input "C:\papers\review-input.json" --prepared-by Codex
 ```
 
-Presentation export remains gated by CKPT-2. Blocking evidence, stale source bindings, missing quantitative facts, and failed QA must fail closed.
+Only an explicit human or user-authorized decision can approve CKPT-1. A source hash change makes the review stale. After CKPT-1 is confirmed:
 
-## Evidence and locator policy
+```powershell
+scholar-slides build --project "C:\papers\paper-project" --resume
+scholar-slides review --project "C:\papers\paper-project"
+scholar-slides export --project "C:\papers\paper-project" --formats html,pdf,pptx,notes
+```
 
-Evidence is source-bound. Locator parsing supports page, page range, section, figure, table, equation, appendix, and mixed locators while distinguishing PDF page index, printed page label, and source page reference. Resolver status is explicit: `exact`, `normalized`, `fuzzy`, `partial`, `ambiguous`, or `unresolved`.
+Export remains gated by CKPT-2. Blocking evidence, stale bindings, missing quantitative facts, and failed QA fail closed.
 
-`ambiguous` and `unresolved` evidence must never be guessed automatically. Parsing a locator is insufficient: the referenced evidence span must be validated against the source. Producer defects and resolver gaps are recorded separately. Do not add paper-specific locator exceptions.
+## Evidence resolver
 
-## Paper-Tutor workflow
+The resolver supports page, page range, section, figure, table, equation, appendix, and mixed locators. It distinguishes PDF page index, printed page label, and source page reference. Every locator ends in an explicit status: `exact`, `normalized`, `fuzzy`, `partial`, `ambiguous`, or `unresolved`.
 
-Read the matching Scholar-Slides reading view when available, keep the upstream project read-only, and disclose the verification mode in the output. Use the references in `paper-tutor/references/` for integration, depth, output contracts, benchmark papers, reading completion, and learning-map synchronization.
+`ambiguous` and `unresolved` evidence is never guessed automatically. Locator parsing is followed by evidence-span validation. Producer bugs and resolver gaps are recorded separately, and paper-specific locator exceptions are prohibited.
 
-Integrated output must preserve the paper identity and source hashes. Standalone output must say that Scholar-Slides CKPT-1 verification was not available. Unsupported claims remain unavailable, not verifiable, or Tutor Analysis; they are never silently promoted to Paper Facts.
+## Paper-Tutor
 
-## Learning Map and formula projection
+In Integrated Mode, Paper-Tutor consumes a matching Scholar-Slides reading view and evidence set while keeping the upstream project read-only. In Standalone Mode it states that Scholar-Slides CKPT-1 verification was unavailable. Paper Facts, Tutor Explanation, and Tutor Analysis remain visibly distinct; unsupported claims stay unavailable, unverifiable, or analytical.
 
-Build and render a map from a validated Scholar-Slides project:
+The structured Learning Map bridge is available as:
+
+```powershell
+$recordsJson | python paper-tutor/scripts/learning_map_sync.py `
+  --project "C:\papers\paper-map" `
+  --map-root "C:\path\to\scholar-slides\paper-learning-map" `
+  --origin full_analysis
+```
+
+## Learning Map and formulas
 
 ```powershell
 python scholar-slides/paper-learning-map/runtime/build_paper_map.py `
-  --project C:\\path\\paper-project --out C:\\path\\map
+  --project "C:\papers\paper-project" --out "C:\papers\paper-map"
 python scholar-slides/paper-learning-map/runtime/render_paper_map.py `
-  --project C:\\path\\map
+  --project "C:\papers\paper-map"
 ```
 
-Tutor records should use the structured sync hook. It writes only downstream tutor/study state and a receipt containing event status, node resolutions, unresolved deltas, and before/after hashes:
+The map renders formulas offline and retains raw LaTeX plus a fallback when parsing fails. Formula indexes are rejected when identity or validation level does not match. Only downstream tutor and study state is writable.
+
+## Validation
+
+The repository contains runnable unit tests:
 
 ```powershell
-$recordsJson | python scholar-slides/paper-learning-map/runtime/update_tutor_state.py `
-  --project C:\\path\\map sync --stdin --origin full_analysis
-```
-
-Formula rendering is offline and retains raw LaTeX plus a local fallback when parsing fails. Formula indexes are rejected when their paper identity or validation level does not match the loaded map.
-
-## Quality gates
-
-Run the relevant tests from the repository root:
-
-```powershell
+python scripts/validate_skills.py scholar-slides paper-tutor
+python scripts/audit_public_release.py --repo . --json
 python -m unittest discover -s scholar-slides/tests -q
 python -m unittest discover -s scholar-slides/paper-learning-map/tests -q
 ```
 
-Chromium and integrity QA must report zero unexpected external requests, zero page errors, source/hash consistency, and successful formula/detail rendering. Keep CKPT-1 records immutable; any evidence, decision, promotion, or provenance change belongs to a new checkpoint.
+Six deep-output tests require generated SWE-Touch, Reasoning-Table, or CKPT-1 closeout artifacts and are skipped with an explicit reason when those optional artifacts are absent. CI installs dependencies and Chromium, runs all available tests, validates metadata, runs the public-release audit, and executes the CLI doctor.
 
-## Provenance
+The current CKPT-1 baseline is immutable. Evidence status, review decisions, promotion provenance, and `partial` states belong to a new checkpoint rather than a rewrite of CKPT-1.
 
-Automated checks and Codex-authorized review are not natural-person signatures. Human review receipts must identify the reviewer and remain bound to the PDF, digest, reading-view, resolver report, and relevant output hashes. Promotion never changes the underlying evidence status.
+## Public-release audit
+
+Run `scripts/audit_public_release.py` before publishing. It checks tracked files for credentials, private keys, and oversized artifacts. Sample fixtures are included for regression coverage; review their licensing and distribution suitability before adding new source material.

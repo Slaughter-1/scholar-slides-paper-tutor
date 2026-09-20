@@ -291,7 +291,7 @@ def _approve(args: argparse.Namespace) -> int:
 
 
 def _doctor(args: argparse.Namespace) -> int:
-    checks = run_doctor()
+    checks = run_doctor(require_cjk=args.require_cjk)
     payload = {"ok": not any(check.status == "FAIL" for check in checks), "version": VERSION, "config_version": CONFIG_VERSION, "options": args.options, "checks": [check.as_dict() for check in checks]}
     if args.json:
         print(json.dumps(payload))
@@ -397,7 +397,9 @@ def _parser() -> argparse.ArgumentParser:
     for name in ("build", "ingest", "review", "export", "doctor"):
         child = sub.add_parser(name)
         _add_global_flags(child, suppress_defaults=True)
-        if name != "doctor":
+        if name == "doctor":
+            child.add_argument("--require-cjk", action="store_true", help="fail when a CJK font is unavailable")
+        else:
             child.add_argument("--input")
             child.add_argument("--out", "--project", dest="out", metavar="PROJECT")
         if name == "export":
