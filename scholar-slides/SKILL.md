@@ -5,7 +5,7 @@ description: Use when a user asks to read, explain, digest, review, summarize, o
 
 # scholar-slides
 
-Version: 0.3.0 Final Stable
+Version: 0.4.0 Final Stable
 
 Use this Skill for source-grounded paper analysis and academic presentations. Never fill a
 scientific gap from memory. Keep every project in the user's chosen output directory, never
@@ -106,7 +106,7 @@ scholar-slides --version
 scholar-slides doctor --json
 ```
 
-Require version `0.3.0` and `doctor.ok = true` before starting a long run. A missing or stale
+Require version `0.4.0` and `doctor.ok = true` before starting a long run. A missing or stale
 source, checkpoint binding, required quantitative fact, or blocking QA finding must fail
 closed. Do not invent content, bypass a gate, or add a paper-specific exception.
 

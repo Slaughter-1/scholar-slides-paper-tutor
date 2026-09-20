@@ -1,6 +1,6 @@
 # scholar-slides 中文使用说明
 
-> 当前正式版本：0.3.0 Final Stable
+> 当前正式版本：0.4.0 Final Stable
 
 scholar-slides 是面向 Codex 的学术论文阅读与学术汇报 Skill。它把论文、证据、人工审核、
 PPT 和最终交付串成可审计流程：事实来自源 PDF 和已批准 checkpoint，不从记忆补全缺失事实。
@@ -228,7 +228,7 @@ scholar-slides doctor --json
 预期：
 
 ```text
-版本 = 0.3.0
+版本 = 0.4.0
 doctor.ok = true
 ```
 

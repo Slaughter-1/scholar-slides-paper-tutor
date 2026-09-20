@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "paper_identity": {
+    "title": "Malformed Formula Fixture",
+    "source_pdf_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "source": {
+    "mode": "integrated",
+    "verification_level": "scholar_slides_validated"
+  },
+  "derived": true,
+  "formulas": [
+    {
+      "id": "formula.fixture.malformed",
+      "anchor_node_id": "method.step_2",
+      "title": "Malformed Formula",
+      "display_mode": true,
+      "equation_label": null,
+      "paper_formula": {
+        "latex": "\\frac{a}{",
+        "display_mode": true,
+        "formula_kind": "paper_formula",
+        "source_layer": "paper",
+        "evidence_refs": ["fixture://malformed"],
+        "source_trace": [{"kind": "fixture", "ref": "fixture://malformed"}]
+      },
+      "tutor_derivation": {
+        "text": "Malformed fixture intentionally exercises raw TeX fallback.",
+        "latex": "",
+        "display_mode": true,
+        "formula_kind": "tutor_derivation",
+        "source_layer": "tutor",
+        "evidence_refs": [],
+        "source_trace": []
+      },
+      "tutor_example": {
+        "text": "Tutor-generated example is unavailable for this fixture.",
+        "latex": "",
+        "display_mode": true,
+        "formula_kind": "tutor_example",
+        "source_layer": "tutor",
+        "evidence_refs": [],
+        "source_trace": []
+      },
+      "symbols": [],
+      "mathematical_meaning": "Malformed fixture.",
+      "intuition": "A parser failure must remain local.",
+      "necessity": "The page must remain usable.",
+      "example": "Not available in the structured source.",
+      "misunderstanding": "This is a test fixture, not a paper claim.",
+      "evidence": {
+        "evidence_refs": ["fixture://malformed"],
+        "source_trace": [{"kind": "fixture", "ref": "fixture://malformed"}]
+      },
+      "canonical_key": "method.step_2|\\frac{a}{"
+    }
+  ],
+  "duplicates_removed": [],
+  "meta": {"generator": "test-fixture", "formula_count": 1}
+}
