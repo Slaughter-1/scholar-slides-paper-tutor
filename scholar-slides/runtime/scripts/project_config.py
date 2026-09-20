@@ -349,9 +349,15 @@ def doctor(*, require_cjk: bool = False) -> list[DoctorCheck]:
     browser_script = "const {chromium}=require('playwright');const p=process.env.SCHOLAR_SLIDES_CHROMIUM_EXECUTABLE;const o={headless:true,...(p?{executablePath:p}:{})};chromium.launch(o).then(b=>b.close()).then(()=>process.exit(0)).catch(()=>process.exit(1))"
     chromium_ready = bool(node) and _command_works([node, "-e", browser_script], cwd=ROOT, env=browser_env)
     checks.append(DoctorCheck("Playwright Chromium", "PASS", "Playwright Chromium is installed.", "") if chromium_ready else DoctorCheck("Playwright Chromium", "FAIL", "Playwright Chromium is unavailable.", "Run: npx playwright install chromium. On Linux/WSL, install required system libraries too."))
-    fc_list = shutil.which("fc-list")
-    cjk_output = _command_output([fc_list, ":lang=zh", "family"]) if fc_list else None
-    cjk_ready = bool(cjk_output and cjk_output.strip())
+    # Use the same glyph-coverage probe as export preflight on every platform.
+    # ``fc-list`` is unavailable on standard Windows installs and used to make
+    # doctor report a false CJK warning even when Microsoft YaHei or SimSun existed.
+    try:
+        from font_preflight import detect_cjk_font
+        cjk_family = detect_cjk_font()
+    except (ImportError, RuntimeError, OSError, ValueError):
+        cjk_family = None
+    cjk_ready = bool(cjk_family)
     checks.append(DoctorCheck("CJK font", "PASS", "A CJK-capable font is available.", "") if cjk_ready else DoctorCheck("CJK font", "FAIL" if require_cjk else "WARN", "No CJK-capable font was detected.", "Install a CJK font before Chinese PDF/PPTX export, or rerun without --require-cjk for HTML/English-only work."))
     modules = ("fitz", "PIL", "pptx")
     missing = [module for module in modules if importlib.util.find_spec(module) is None]
