@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Paper Learning Map Study State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "paper_identity", "nodes"],
+  "properties": {"schema_version": {"const": "1.0"}, "paper_identity": {"type": "object", "required": ["source_pdf_sha256"], "properties": {"source_pdf_sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}}}, "nodes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/state"}}},
+  "$defs": {"state": {"type": "object", "required": ["status", "mastery", "important", "confusing"], "additionalProperties": false, "properties": {"status": {"enum": ["unseen", "learning", "understood", "mastered"]}, "mastery": {"type": "integer", "minimum": 0, "maximum": 3}, "important": {"type": "boolean"}, "confusing": {"type": "boolean"}, "last_reviewed_at": {"type": "string"}}}}
+}

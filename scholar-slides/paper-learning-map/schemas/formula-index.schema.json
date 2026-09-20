@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Derived formula presentation index",
+  "type": "object",
+  "required": ["schema_version", "paper_identity", "source", "derived", "formulas"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "paper_identity": {
+      "type": "object",
+      "required": ["title", "source_pdf_sha256"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "source_pdf_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["mode", "verification_level"],
+      "properties": {
+        "mode": {"const": "integrated"},
+        "verification_level": {"const": "scholar_slides_validated"}
+      },
+      "additionalProperties": true
+    },
+    "derived": {"const": true},
+    "formulas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "anchor_node_id", "title", "paper_formula", "tutor_derivation", "tutor_example", "symbols", "evidence"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^formula\\."},
+          "anchor_node_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "equation_label": {"type": ["string", "null"]},
+          "paper_formula": {"$ref": "#/$defs/layer"},
+          "tutor_derivation": {"$ref": "#/$defs/layer"},
+          "tutor_example": {"$ref": "#/$defs/layer"},
+          "symbols": {"type": "array"},
+          "mathematical_meaning": {"type": "string"},
+          "intuition": {"type": "string"},
+          "necessity": {"type": "string"},
+          "example": {"type": "string"},
+          "misunderstanding": {"type": "string"},
+          "evidence": {"type": "object"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "$defs": {
+    "layer": {
+      "type": "object",
+      "required": ["formula_kind", "source_layer", "evidence_refs", "source_trace"],
+      "properties": {
+        "latex": {"type": "string"},
+        "text": {"type": "string"},
+        "display_mode": {"type": "boolean"},
+        "formula_kind": {"enum": ["paper_formula", "tutor_derivation", "tutor_example"]},
+        "source_layer": {"enum": ["paper", "tutor"]},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}},
+        "source_trace": {"type": "array"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

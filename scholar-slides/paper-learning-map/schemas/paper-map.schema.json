@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Paper Learning Map",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "paper_identity", "source", "paper_type", "language", "nodes", "edges", "meta"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "paper_identity": {"type": "object", "required": ["title", "source_pdf_sha256"], "additionalProperties": false, "properties": {"title": {"type": "string", "minLength": 1}, "source_pdf_sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}}},
+    "source": {"type": "object", "required": ["reading_view", "digest", "mode"], "additionalProperties": false, "properties": {"reading_view": {"type": "string"}, "digest": {"type": "string"}, "mode": {"enum": ["integrated", "standalone"]}, "verification_level": {"enum": ["scholar_slides_validated", "tutor_only"]}}},
+    "paper_type": {"type": "string", "minLength": 1},
+    "language": {"enum": ["zh-CN", "en-US"]},
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "meta": {"type": "object", "required": ["generated_at", "generator_version"], "additionalProperties": false, "properties": {"generated_at": {"type": "string"}, "generator_version": {"type": "string"}, "project": {"type": "string"}}}
+  },
+  "$defs": {
+    "node": {"type": "object", "required": ["id", "title", "node_type", "summary", "claim_type", "availability", "evidence_refs", "source_trace", "tags"], "additionalProperties": false, "properties": {"id": {"type": "string", "minLength": 1}, "parent_id": {"type": ["string", "null"]}, "title": {"type": "string", "minLength": 1}, "node_type": {"type": "string", "minLength": 1}, "summary": {"type": "string"}, "claim_type": {"enum": ["paper_fact", "explanation", "analysis"]}, "availability": {"enum": ["supported", "not_reported", "unverifiable"]}, "paper_fact": {"type": ["object", "null"]}, "evidence_refs": {"type": "array", "items": {"type": "string"}}, "source_trace": {"type": "array", "items": {"type": "object"}}, "tags": {"type": "array", "items": {"type": "string"}}}},
+    "edge": {"type": "object", "required": ["source", "target", "relation"], "additionalProperties": false, "properties": {"source": {"type": "string"}, "target": {"type": "string"}, "relation": {"enum": ["parent_of", "motivates", "implements", "requires", "produces", "supports", "contradicts", "evaluates", "ablates", "depends_on", "compares_with"]}}}
+  }
+}

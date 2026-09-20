@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from schema_validation import create_schema_validator, resolve_skill_schema_path
+from evidence_resolver import build_document_index, resolve_and_verify
 
 
 class ReadingViewError(ValueError):
@@ -98,15 +99,38 @@ def _normalise_locator(value: str) -> str:
 
 
 def _locator_in_text(locator: str, text: str) -> bool:
-    """Check numbered labels without matching Table 1 to Table 10."""
+    """Check numbered labels only when they occur as a heading or caption line."""
     numbered = re.fullmatch(r"(table|tab\.?|figure|fig\.?|section)\s+(\d+(?:\.\d+)*)", locator, re.I)
     if numbered:
         kind, number = numbered.groups()
         label = r"(?:table|tab\.?)" if kind.lower().startswith("tab") else r"(?:figure|fig\.?)"
         if kind.lower() == "section":
-            return bool(re.search(r"(?:\bsection\s+|(?m:^)[ \t]*)" + re.escape(number) + r"(?![\d.])\s+\S", text, re.I))
-        return bool(re.search(r"\b" + label + r"\s*" + re.escape(number) + r"(?!\d)", text, re.I))
-    return _normalise_locator(locator) in _normalise_locator(text)
+            return bool(
+                re.search(
+                    rf"(?im)^\s*(?:section\s+)?{re.escape(number)}(?:\s+|[.:：])",
+                    text,
+                )
+                or re.search(rf"(?im)^\s*section\s+{re.escape(number)}\s*$", text)
+            )
+        return bool(
+            re.search(
+                rf"(?im)^\s*{label}\s*{re.escape(number)}(?:\s*[:：.-]|\s+|$)",
+                text,
+            )
+        )
+    # Section names such as "Method" or "Results" are accepted only as a
+    # standalone heading/caption line, never when embedded in prose.
+    if re.fullmatch(r"[A-Za-z][A-Za-z0-9 /_-]{1,80}", locator.strip()):
+        wanted = _normalise_locator(locator)
+        for line in text.splitlines():
+            candidate = line.strip().strip(".:：-")
+            if candidate and _normalise_locator(candidate) == wanted:
+                return True
+            if candidate and _normalise_locator(candidate).endswith(wanted):
+                prefix = _normalise_locator(candidate)[: -len(wanted)]
+                if prefix.isdigit() or prefix in {"section", "chapter"}:
+                    return True
+    return False
 
 
 def _iter_evidence_records(value: Any):
@@ -136,7 +160,7 @@ def _digest_locator_matches(digest: Mapping[str, Any] | None, page: int, locator
             value = record.get(key)
             if isinstance(value, str):
                 haystack = _normalise_locator(value)
-                if haystack and needle == haystack:
+                if haystack and (needle == haystack or needle in haystack or haystack in needle):
                     return True
     return False
 
@@ -214,26 +238,12 @@ def _validate_evidence_refs(
     collect(payload)
     page_texts = _source_page_texts(paper_source)
     known_ids = _digest_evidence_ids(digest)
+    if refs and page_texts is None:
+        raise ReadingViewError("cannot verify page reference: bound paper PDF is unreadable")
+    resolver_index = build_document_index(page_texts or [], digest=digest)
     for reference in dict.fromkeys(refs):
-        page_match = _PAGE_REF_RE.match(reference)
-        if page_match:
-            page = int(page_match.group(1))
-            if page_texts is None:
-                raise ReadingViewError(f"cannot verify page reference: bound paper PDF is unreadable: {reference}")
-            if page < 1:
-                raise ReadingViewError(f"reading view evidence reference has an invalid page: {reference}")
-            if page_texts is not None and page > len(page_texts):
-                raise ReadingViewError(f"reading view evidence reference points past the PDF: {reference}")
-            locator = (page_match.group(2) or "").strip()
-            if locator and page_texts is not None:
-                page_text = _normalise_locator(page_texts[page - 1]) if page <= len(page_texts) else ""
-                locator_token = _normalise_locator(locator)
-                if (
-                    locator_token
-                    and not _locator_in_text(locator, page_texts[page - 1])
-                    and not _digest_locator_matches(digest, page, locator)
-                ):
-                    raise ReadingViewError(f"reading view evidence locator cannot be resolved: {reference}")
+        parsed = resolve_and_verify(reference, resolver_index)
+        if parsed.status in {"exact", "normalized", "fuzzy", "partial"} and parsed.evidence_span:
             continue
 
         pointer_match = _POINTER_REF_RE.match(reference)
@@ -252,7 +262,8 @@ def _validate_evidence_refs(
 
         if reference in known_ids:
             continue
-        raise ReadingViewError(f"reading view evidence reference cannot be resolved: {reference}")
+        reasons = ", ".join(parsed.failure_reason_codes) or parsed.status
+        raise ReadingViewError(f"reading view evidence locator cannot be resolved: {reference} ({parsed.status}: {reasons})")
 
 
 def _validate_semantic_units(payload: Mapping[str, Any]) -> None:

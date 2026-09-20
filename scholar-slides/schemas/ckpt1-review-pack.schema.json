@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.openai.com/schemas/scholar-slides/ckpt1-review-pack.schema.json",
+  "title": "Phase 7.3 CKPT-1 source-bound human review pack",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "kind", "review_pack_id", "paper", "paper_identity", "inputs", "review_protocol", "review_items", "coverage", "promotion_status", "evidence_status_snapshot", "pack_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase7.3.ckpt1-review-pack.v1"},
+    "kind": {"const": "ckpt-1-review-pack"},
+    "review_pack_id": {"type": "string", "minLength": 1},
+    "paper": {"type": "string", "minLength": 1},
+    "paper_identity": {"type": "object", "required": ["title", "source_pdf_sha256"], "additionalProperties": true, "properties": {"title": {"type": "string"}, "source_pdf_sha256": {"$ref": "#/$defs/sha256"}}},
+    "inputs": {"$ref": "#/$defs/inputs"},
+    "review_protocol": {"type": "object", "required": ["state", "human_confirmation_required", "evidence_status_immutable", "stale_when_any_input_hash_changes"], "additionalProperties": true, "properties": {"state": {"const": "WAITING_FOR_HUMAN_CKPT1"}, "human_confirmation_required": {"const": true}, "evidence_status_immutable": {"const": true}, "stale_when_any_input_hash_changes": {"const": true}}},
+    "review_items": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/item"}},
+    "coverage": {"type": "object", "required": ["review_items_total", "status_counts", "non_exact_groups"], "additionalProperties": true},
+    "promotion_status": {"const": "WAITING_FOR_HUMAN_CKPT1"},
+    "evidence_status_snapshot": {"type": "object", "additionalProperties": {"enum": ["exact", "normalized", "fuzzy", "partial", "ambiguous", "unresolved"]}},
+    "pack_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "file": {"type": "object", "required": ["path", "sha256"], "additionalProperties": true, "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "inputs": {"type": "object", "required": ["source_pdf", "digest", "reading_view", "resolver_report"], "additionalProperties": true, "properties": {"source_pdf": {"$ref": "#/$defs/file"}, "digest": {"$ref": "#/$defs/file"}, "reading_view": {"$ref": "#/$defs/file"}, "resolver_report": {"$ref": "#/$defs/file"}}},
+    "resolution": {"type": "object", "required": ["status", "evidence_span_verified"], "additionalProperties": true, "properties": {"status": {"enum": ["exact", "normalized", "fuzzy", "partial", "ambiguous", "unresolved"]}, "evidence_span_verified": {"type": "boolean"}}},
+    "review": {"type": "object", "required": ["decision", "reviewer", "reviewed_at"], "additionalProperties": true, "properties": {"decision": {"type": ["string", "null"], "enum": ["approve", "approve_as_partial", "reject", "needs_fix", "not_applicable", null]}, "reviewer": {"type": ["string", "null"]}, "reviewed_at": {"type": ["string", "null"]}}},
+    "item": {"type": "object", "required": ["item_id", "category", "claim", "critical", "resolution", "review"], "additionalProperties": true, "properties": {"item_id": {"type": "string"}, "category": {"type": "string"}, "claim": {"type": "string"}, "critical": {"type": "boolean"}, "resolution": {"$ref": "#/$defs/resolution"}, "review": {"$ref": "#/$defs/review"}}}
+  }
+}
+

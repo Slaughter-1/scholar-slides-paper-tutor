@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Paper Learning Map</title>
+<style>
+__INLINE_CSS__
+</style><style id="katex-css">
+__INLINE_KATEX_CSS__
+</style>
+</head>
+<body>
+<header><h1 id="title">Paper Learning Map</h1><small id="subtitle"></small><span id="sync-status" class="sync-status" aria-live="polite"></span><div class="toolbar"><label for="tutor-layer">Tutor Layer</label><select id="tutor-layer" aria-label="Tutor Layer"><option value="key" selected>Key Notes</option><option value="off">Off</option><option value="all">All</option></select><button id="relations">显示关系</button><button id="theme">深色</button><button id="fit">适应</button><button id="reset">重置</button></div></header>
+<main class="layout"><section class="map-panel"><div class="map-tools"><input id="search" placeholder="搜索节点、术语、证据或 Tutor 内容…"><select id="type"><option value="">全部类型</option></select><select id="status"><option value="">全部学习状态</option><option>unseen</option><option>learning</option><option>understood</option><option>mastered</option></select><select id="availability"><option value="">全部证据状态</option><option>supported</option><option>unverifiable</option><option>not_reported</option></select></div><div class="map-wrap" id="wrap"><svg id="map" viewBox="0 0 1200 760" aria-label="Paper knowledge map"></svg></div><div class="legend" id="count"></div></section></main>
+<aside class="drawer" id="drawer"><button class="drawer-close" id="close" aria-label="关闭详情">×</button><div id="detail" class="empty">点击节点查看详情。</div></aside>
+<script>
+const MAP=__MAP_DATA__;
+const TUTOR=__TUTOR_DATA__;
+const STUDY=__STUDY_DATA__;
+const FORMULAS=__FORMULA_DATA__;
+const SYNC_RECEIPTS=__SYNC_RECEIPTS__;
+window.SYNC_RECEIPTS=SYNC_RECEIPTS;
+window.FORMULAS=FORMULAS;
+__INLINE_KATEX_JS__
+__INLINE_JS__
+document.querySelector('#subtitle').textContent=`${MAP.paper_type} · ${MAP.source.mode || 'unknown'} · ${MAP.source.verification_level || 'unverified'}`;
+</script>
+</body></html>

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.openai.com/schemas/scholar-slides/ckpt1-human-review-receipt.schema.json",
+  "title": "Phase 7.3 CKPT-1 human review receipt",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "kind", "review_pack_id", "bound_inputs", "review_pack_sha256", "evidence_status_snapshot", "review_items", "review_status", "human_confirmation", "promotion_status"],
+  "properties": {
+    "schema_version": {"const": "phase7.3.ckpt1-human-review-receipt.v1"},
+    "kind": {"const": "ckpt-1-human-review-receipt"},
+    "review_pack_id": {"type": "string"},
+    "bound_inputs": {"$ref": "#/$defs/inputs"},
+    "review_pack_sha256": {"$ref": "#/$defs/sha256"},
+    "evidence_status_snapshot": {"type": "object"},
+    "review_items": {"type": "array", "items": {"type": "object", "required": ["item_id", "resolution_status", "decision"], "additionalProperties": true, "properties": {"item_id": {"type": "string"}, "resolution_status": {"enum": ["exact", "normalized", "fuzzy", "partial", "ambiguous", "unresolved"]}, "decision": {"type": ["string", "null"]}}}},
+    "review_status": {"enum": ["pending", "in_review", "ready_for_promotion", "stale", "blocked"]},
+    "human_confirmation": {"type": "object", "required": ["received", "reviewer", "reviewed_at"], "additionalProperties": true, "properties": {"received": {"type": "boolean"}, "reviewer": {"type": ["string", "null"]}, "reviewed_at": {"type": ["string", "null"]}}},
+    "promotion_status": {"enum": ["WAITING_FOR_HUMAN_CKPT1", "STALE_REVIEW", "PROMOTION_BLOCKED", "PROMOTED"]}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "file": {"type": "object", "required": ["path", "sha256"], "additionalProperties": true, "properties": {"path": {"type": "string"}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "inputs": {"type": "object", "required": ["source_pdf", "digest", "reading_view", "resolver_report"], "properties": {"source_pdf": {"$ref": "#/$defs/file"}, "digest": {"$ref": "#/$defs/file"}, "reading_view": {"$ref": "#/$defs/file"}, "resolver_report": {"$ref": "#/$defs/file"}}}
+  }
+}
+

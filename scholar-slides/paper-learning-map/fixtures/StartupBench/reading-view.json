@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "paper_identity": {
+    "title": "StartupBench: Benchmarking General-Purpose Agents on Market-Validated End-to-End Workflows",
+    "source_pdf_sha256": "2d66d0eb99c5cc66f4f0afba932bebef1b54cad26fc586091358e6296d3efe66"
+  },
+  "source_bindings": [
+    {
+      "path": "D:/Users/16595/Documents/ChatGPT/进组准备/第一次论文阅读/07_StartupBench/scholar-slides-analysis/source.pdf",
+      "sha256": "2d66d0eb99c5cc66f4f0afba932bebef1b54cad26fc586091358e6296d3efe66"
+    },
+    {
+      "path": "digest.json",
+      "sha256": "869f3abacd4f7440bf4950145ce815648fda137c400bf52fa4db41a6193089a0"
+    }
+  ],
+  "language": "zh-CN",
+  "paper_type": {
+    "kind": "benchmark",
+    "reason": "The benchmark and its evaluation protocol are the primary contribution."
+  },
+  "overview": {
+    "problem": {
+      "content": "现有 Agent benchmark 常用研究者预设任务，不能充分说明模型是否能完成真实用户需要的完整工作。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 1"
+      ]
+    },
+    "gap": {
+      "content": "已有评测往往只检查局部回答或宽泛的整体分数，不能逐项验证专业交付物的功能、结构、格式和领域要求。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 1"
+      ]
+    },
+    "approach": {
+      "content": "作者从已有市场需求和真实用户工作流出发构造可复现任务，用细粒度 rubric 检查最终交付物。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 2"
+      ]
+    },
+    "insight": {
+      "content": "作者把 benchmark 的基本单位从单个问答改成有上下文、资源和交付要求的完整工作流，再用逐项验收解释部分完成与整题成功的差别。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 2",
+        "p. 8"
+      ]
+    },
+    "findings": {
+      "content": "强模型在平均分上能完成不少局部要求，但最高严格任务成功率仍只有 31.27%。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 8"
+      ]
+    },
+    "boundary": {
+      "content": "这些结果说明受测系统在该 benchmark 和统一 harness 下的可靠完成能力有限，不能直接等同于所有企业部署场景。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 8",
+        "p. 14"
+      ]
+    }
+  },
+  "mechanism_steps": [
+    {
+      "title": "从市场需求发现工作流",
+      "purpose": "避免任务只反映研究者想象的能力。",
+      "input": "市场验证的 AI 产品与深度用户访谈",
+      "output": "候选专业工作流",
+      "necessity": "任务必须先有现实需求，才有实际验收标准。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 4"
+      ]
+    },
+    {
+      "title": "专家重构并校准任务",
+      "purpose": "把工作流转成可重复执行的完整任务。",
+      "input": "候选工作流与领域要求",
+      "output": "97 个带交付物和 rubric 的任务",
+      "necessity": "没有可复现任务就无法公平比较系统。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 6"
+      ]
+    },
+    {
+      "title": "按 rubric 检查交付物",
+      "purpose": "区分部分完成和真正通过验收。",
+      "input": "Agent 生成的异构文件、渲染页面和文本视图",
+      "output": "加权得分与严格成功率",
+      "necessity": "平均分不能替代关键条件的全通过。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 7",
+        "p. 8"
+      ]
+    }
+  ],
+  "argument_chain": [
+    {
+      "node": "研究者预设任务与真实需求有距离",
+      "relation": "促使作者从市场验证工作流发现任务",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 1"
+      ]
+    },
+    {
+      "node": "真实工作流包含多个交付要求",
+      "relation": "需要细粒度 rubric 和 artifact-aware evaluation",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 2"
+      ]
+    },
+    {
+      "node": "平均分高于严格成功率",
+      "relation": "说明部分进展不等于可靠完成",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 8"
+      ]
+    },
+    {
+      "node": "失败集中在长流程、复杂指令和专业约束",
+      "relation": "形成对当前 Agent 瓶颈的诊断",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 14"
+      ]
+    }
+  ],
+  "decisive_evidence": [
+    {
+      "question": "模型能否可靠完成完整工作？",
+      "comparison": "9 个模型在统一 Nanobot harness、每题 3 次运行、200 步上限下完成 97 个任务",
+      "metric": "平均加权分与 score≥90 的成功率",
+      "result": "Kimi-K3 平均分最高 73.67；GPT-5.6-sol 严格成功率最高 31.27%",
+      "can_support": "不同模型可取得部分进展，但严格完成仍困难。",
+      "cannot_support": "不能证明模型在所有现实工作流中都只有该成功率。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 7",
+        "p. 8"
+      ]
+    },
+    {
+      "question": "Agent 框架是否改变总体结论？",
+      "comparison": "Hermes、Claude Code 与 Nanobot 的统一框架比较",
+      "metric": "平均 max-minus-min 分差与模型排序",
+      "result": "平均范围 1.79 分且排序不变",
+      "can_support": "在该实验中，框架差异没有改变总体排序。",
+      "cannot_support": "不能证明所有 harness 在所有任务上等价。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 13"
+      ]
+    }
+  ],
+  "terms": [
+    {
+      "term": "Market-validated",
+      "plain": "已经通过真实市场需求或用户使用得到验证。",
+      "role": "说明任务来源不是纯研究者臆造。",
+      "confusions": "不等于任务来自未经加工的企业生产日志。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 4"
+      ]
+    },
+    {
+      "term": "Rubric",
+      "plain": "把交付要求拆成逐项检查的评分细则。",
+      "role": "用来判断部分要求和关键要求分别是否满足。",
+      "confusions": "rubric 得分高不必然等于整题达到严格成功门槛。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 5",
+        "p. 8"
+      ]
+    },
+    {
+      "term": "End-to-end",
+      "plain": "从用户请求一路完成到最终可用交付物。",
+      "role": "把评测对象从单个工具调用扩大到完整工作流。",
+      "confusions": "不是只要最终文本通顺就算端到端正确。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 1"
+      ]
+    },
+    {
+      "term": "Agent harness",
+      "plain": "为模型提供工具、执行循环和步数约束的运行框架。",
+      "role": "控制模型如何观察、行动和提交交付物。",
+      "confusions": "harness 不是被测模型本身。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 7"
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "kind": "author_contribution",
+      "content": "论文提出从市场验证产品和用户工作流构造任务的 benchmark 方法。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 2"
+      ]
+    },
+    {
+      "kind": "explicit_limitation",
+      "content": "模型常能完成部分要求，却难以稳定完成包含专业约束的长流程。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 14"
+      ]
+    },
+    {
+      "kind": "reader_analysis",
+      "content": "阅读榜单时必须同时看平均分和严格成功率，因为二者回答的是不同问题。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 8"
+      ]
+    },
+    {
+      "kind": "research_question",
+      "content": "如果把自我验证、专业工具和失败恢复分别控制，严格成功率会如何变化？",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 14"
+      ]
+    }
+  ]
+}

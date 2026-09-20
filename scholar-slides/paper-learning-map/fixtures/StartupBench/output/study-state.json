@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0",
+  "paper_identity": {
+    "source_pdf_sha256": "2d66d0eb99c5cc66f4f0afba932bebef1b54cad26fc586091358e6296d3efe66"
+  },
+  "nodes": {
+    "paper": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "overview.problem": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "overview.gap": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "overview.approach": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "overview.insight": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "overview.findings": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "overview.boundary": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "method": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "method.step_1": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "method.step_2": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "method.step_3": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "evidence": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "evidence.block_1": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "evidence.block_2": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "terms": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "term.1": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "term.2": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "term.3": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "term.4": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "takeaways": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "takeaway.1": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "takeaway.2": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "takeaway.3": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    },
+    "takeaway.4": {
+      "status": "unseen",
+      "mastery": 0,
+      "important": false,
+      "confusing": false,
+      "last_reviewed_at": ""
+    }
+  }
+}

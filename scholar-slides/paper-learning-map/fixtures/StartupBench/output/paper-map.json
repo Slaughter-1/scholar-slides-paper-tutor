@@ -1,0 +1,717 @@
+{
+  "schema_version": "1.0",
+  "paper_identity": {
+    "title": "StartupBench: Benchmarking General-Purpose Agents on Market-Validated End-to-End Workflows",
+    "source_pdf_sha256": "2d66d0eb99c5cc66f4f0afba932bebef1b54cad26fc586091358e6296d3efe66"
+  },
+  "source": {
+    "reading_view": "reading-view.json",
+    "digest": "digest.json",
+    "mode": "integrated",
+    "verification_level": "scholar_slides_validated"
+  },
+  "paper_type": "benchmark",
+  "language": "zh-CN",
+  "nodes": [
+    {
+      "id": "paper",
+      "parent_id": null,
+      "title": "StartupBench: Benchmarking General-Purpose Agents on Market-Validated End-to-End Workflows",
+      "node_type": "paper",
+      "summary": "StartupBench: Benchmarking General-Purpose Agents on Market-Validated End-to-End Workflows",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "StartupBench: Benchmarking General-Purpose Agents on Market-Validated End-to-End Workflows"
+      },
+      "evidence_refs": [],
+      "source_trace": [],
+      "tags": [
+        "benchmark"
+      ]
+    },
+    {
+      "id": "overview.problem",
+      "parent_id": "paper",
+      "title": "Problem",
+      "node_type": "overview",
+      "summary": "现有 Agent benchmark 常用研究者预设任务，不能充分说明模型是否能完成真实用户需要的完整工作。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "现有 Agent benchmark 常用研究者预设任务，不能充分说明模型是否能完成真实用户需要的完整工作。"
+      },
+      "evidence_refs": [
+        "p. 1"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 1",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "overview.gap",
+      "parent_id": "paper",
+      "title": "Gap",
+      "node_type": "overview",
+      "summary": "已有评测往往只检查局部回答或宽泛的整体分数，不能逐项验证专业交付物的功能、结构、格式和领域要求。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "已有评测往往只检查局部回答或宽泛的整体分数，不能逐项验证专业交付物的功能、结构、格式和领域要求。"
+      },
+      "evidence_refs": [
+        "p. 1"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 1",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "gap"
+      ]
+    },
+    {
+      "id": "overview.approach",
+      "parent_id": "paper",
+      "title": "Approach",
+      "node_type": "overview",
+      "summary": "作者从已有市场需求和真实用户工作流出发构造可复现任务，用细粒度 rubric 检查最终交付物。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "作者从已有市场需求和真实用户工作流出发构造可复现任务，用细粒度 rubric 检查最终交付物。"
+      },
+      "evidence_refs": [
+        "p. 2"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 2",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "approach"
+      ]
+    },
+    {
+      "id": "overview.insight",
+      "parent_id": "paper",
+      "title": "Insight",
+      "node_type": "overview",
+      "summary": "作者把 benchmark 的基本单位从单个问答改成有上下文、资源和交付要求的完整工作流，再用逐项验收解释部分完成与整题成功的差别。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 2",
+        "p. 8"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 2",
+          "verification": "inherited_from_validated_reading_view"
+        },
+        {
+          "kind": "reference",
+          "value": "p. 8",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "insight"
+      ]
+    },
+    {
+      "id": "overview.findings",
+      "parent_id": "paper",
+      "title": "Findings",
+      "node_type": "overview",
+      "summary": "强模型在平均分上能完成不少局部要求，但最高严格任务成功率仍只有 31.27%。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "强模型在平均分上能完成不少局部要求，但最高严格任务成功率仍只有 31.27%。"
+      },
+      "evidence_refs": [
+        "p. 8"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 8",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "findings"
+      ]
+    },
+    {
+      "id": "overview.boundary",
+      "parent_id": "paper",
+      "title": "Boundary",
+      "node_type": "overview",
+      "summary": "这些结果说明受测系统在该 benchmark 和统一 harness 下的可靠完成能力有限，不能直接等同于所有企业部署场景。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 8",
+        "p. 14"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 8",
+          "verification": "inherited_from_validated_reading_view"
+        },
+        {
+          "kind": "reference",
+          "value": "p. 14",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "boundary"
+      ]
+    },
+    {
+      "id": "method",
+      "parent_id": "paper",
+      "title": "Method",
+      "node_type": "method",
+      "summary": "Mechanism steps from the validated reading view.",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [],
+      "source_trace": [],
+      "tags": []
+    },
+    {
+      "id": "method.step_1",
+      "parent_id": "method",
+      "title": "从市场需求发现工作流",
+      "node_type": "mechanism",
+      "summary": "避免任务只反映研究者想象的能力。 Input: 市场验证的 AI 产品与深度用户访谈. Output: 候选专业工作流.",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "避免任务只反映研究者想象的能力。 Input: 市场验证的 AI 产品与深度用户访谈. Output: 候选专业工作流."
+      },
+      "evidence_refs": [
+        "p. 4"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 4",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "mechanism"
+      ]
+    },
+    {
+      "id": "method.step_2",
+      "parent_id": "method",
+      "title": "专家重构并校准任务",
+      "node_type": "mechanism",
+      "summary": "把工作流转成可重复执行的完整任务。 Input: 候选工作流与领域要求. Output: 97 个带交付物和 rubric 的任务.",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "把工作流转成可重复执行的完整任务。 Input: 候选工作流与领域要求. Output: 97 个带交付物和 rubric 的任务."
+      },
+      "evidence_refs": [
+        "p. 6"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 6",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "mechanism"
+      ]
+    },
+    {
+      "id": "method.step_3",
+      "parent_id": "method",
+      "title": "按 rubric 检查交付物",
+      "node_type": "mechanism",
+      "summary": "区分部分完成和真正通过验收。 Input: Agent 生成的异构文件、渲染页面和文本视图. Output: 加权得分与严格成功率.",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "区分部分完成和真正通过验收。 Input: Agent 生成的异构文件、渲染页面和文本视图. Output: 加权得分与严格成功率."
+      },
+      "evidence_refs": [
+        "p. 7",
+        "p. 8"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 7",
+          "verification": "inherited_from_validated_reading_view"
+        },
+        {
+          "kind": "reference",
+          "value": "p. 8",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "mechanism"
+      ]
+    },
+    {
+      "id": "evidence",
+      "parent_id": "paper",
+      "title": "Evidence",
+      "node_type": "evidence",
+      "summary": "Decisive evidence blocks.",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [],
+      "source_trace": [],
+      "tags": []
+    },
+    {
+      "id": "evidence.block_1",
+      "parent_id": "evidence",
+      "title": "模型能否可靠完成完整工作？",
+      "node_type": "experiment",
+      "summary": "Kimi-K3 平均分最高 73.67；GPT-5.6-sol 严格成功率最高 31.27%",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "Kimi-K3 平均分最高 73.67；GPT-5.6-sol 严格成功率最高 31.27%"
+      },
+      "evidence_refs": [
+        "p. 7",
+        "p. 8"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 7",
+          "verification": "inherited_from_validated_reading_view"
+        },
+        {
+          "kind": "reference",
+          "value": "p. 8",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "evidence"
+      ]
+    },
+    {
+      "id": "evidence.block_2",
+      "parent_id": "evidence",
+      "title": "Agent 框架是否改变总体结论？",
+      "node_type": "experiment",
+      "summary": "平均范围 1.79 分且排序不变",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "平均范围 1.79 分且排序不变"
+      },
+      "evidence_refs": [
+        "p. 13"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 13",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "evidence"
+      ]
+    },
+    {
+      "id": "terms",
+      "parent_id": "paper",
+      "title": "Key Terms",
+      "node_type": "terms",
+      "summary": "Terms required to understand the paper.",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [],
+      "source_trace": [],
+      "tags": []
+    },
+    {
+      "id": "term.1",
+      "parent_id": "terms",
+      "title": "Market-validated",
+      "node_type": "term",
+      "summary": "已经通过真实市场需求或用户使用得到验证。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 4"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 4",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "term"
+      ]
+    },
+    {
+      "id": "term.2",
+      "parent_id": "terms",
+      "title": "Rubric",
+      "node_type": "term",
+      "summary": "把交付要求拆成逐项检查的评分细则。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 5",
+        "p. 8"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 5",
+          "verification": "inherited_from_validated_reading_view"
+        },
+        {
+          "kind": "reference",
+          "value": "p. 8",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "term"
+      ]
+    },
+    {
+      "id": "term.3",
+      "parent_id": "terms",
+      "title": "End-to-end",
+      "node_type": "term",
+      "summary": "从用户请求一路完成到最终可用交付物。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 1"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 1",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "term"
+      ]
+    },
+    {
+      "id": "term.4",
+      "parent_id": "terms",
+      "title": "Agent harness",
+      "node_type": "term",
+      "summary": "为模型提供工具、执行循环和步数约束的运行框架。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 7"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 7",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "term"
+      ]
+    },
+    {
+      "id": "takeaways",
+      "parent_id": "paper",
+      "title": "Takeaways",
+      "node_type": "takeaway",
+      "summary": "Contributions, boundaries, and research questions.",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [],
+      "source_trace": [],
+      "tags": []
+    },
+    {
+      "id": "takeaway.1",
+      "parent_id": "takeaways",
+      "title": "author_contribution",
+      "node_type": "takeaway",
+      "summary": "论文提出从市场验证产品和用户工作流构造任务的 benchmark 方法。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "论文提出从市场验证产品和用户工作流构造任务的 benchmark 方法。"
+      },
+      "evidence_refs": [
+        "p. 2"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 2",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "author_contribution"
+      ]
+    },
+    {
+      "id": "takeaway.2",
+      "parent_id": "takeaways",
+      "title": "explicit_limitation",
+      "node_type": "takeaway",
+      "summary": "模型常能完成部分要求，却难以稳定完成包含专业约束的长流程。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "paper_fact": {
+        "statement": "模型常能完成部分要求，却难以稳定完成包含专业约束的长流程。"
+      },
+      "evidence_refs": [
+        "p. 14"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 14",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "explicit_limitation"
+      ]
+    },
+    {
+      "id": "takeaway.3",
+      "parent_id": "takeaways",
+      "title": "reader_analysis",
+      "node_type": "takeaway",
+      "summary": "阅读榜单时必须同时看平均分和严格成功率，因为二者回答的是不同问题。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 8"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 8",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "reader_analysis"
+      ]
+    },
+    {
+      "id": "takeaway.4",
+      "parent_id": "takeaways",
+      "title": "research_question",
+      "node_type": "takeaway",
+      "summary": "如果把自我验证、专业工具和失败恢复分别控制，严格成功率会如何变化？",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "paper_fact": null,
+      "evidence_refs": [
+        "p. 14"
+      ],
+      "source_trace": [
+        {
+          "kind": "reference",
+          "value": "p. 14",
+          "verification": "inherited_from_validated_reading_view"
+        }
+      ],
+      "tags": [
+        "research_question"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "paper",
+      "target": "overview.problem",
+      "relation": "parent_of"
+    },
+    {
+      "source": "paper",
+      "target": "overview.gap",
+      "relation": "parent_of"
+    },
+    {
+      "source": "paper",
+      "target": "overview.approach",
+      "relation": "parent_of"
+    },
+    {
+      "source": "paper",
+      "target": "overview.insight",
+      "relation": "parent_of"
+    },
+    {
+      "source": "paper",
+      "target": "overview.findings",
+      "relation": "parent_of"
+    },
+    {
+      "source": "paper",
+      "target": "overview.boundary",
+      "relation": "parent_of"
+    },
+    {
+      "source": "paper",
+      "target": "method",
+      "relation": "parent_of"
+    },
+    {
+      "source": "method",
+      "target": "method.step_1",
+      "relation": "parent_of"
+    },
+    {
+      "source": "method",
+      "target": "method.step_2",
+      "relation": "parent_of"
+    },
+    {
+      "source": "method.step_1",
+      "target": "method.step_2",
+      "relation": "implements"
+    },
+    {
+      "source": "method",
+      "target": "method.step_3",
+      "relation": "parent_of"
+    },
+    {
+      "source": "method.step_2",
+      "target": "method.step_3",
+      "relation": "implements"
+    },
+    {
+      "source": "paper",
+      "target": "evidence",
+      "relation": "parent_of"
+    },
+    {
+      "source": "evidence",
+      "target": "evidence.block_1",
+      "relation": "parent_of"
+    },
+    {
+      "source": "evidence.block_1",
+      "target": "overview.findings",
+      "relation": "supports"
+    },
+    {
+      "source": "evidence",
+      "target": "evidence.block_2",
+      "relation": "parent_of"
+    },
+    {
+      "source": "evidence.block_2",
+      "target": "overview.findings",
+      "relation": "supports"
+    },
+    {
+      "source": "paper",
+      "target": "terms",
+      "relation": "parent_of"
+    },
+    {
+      "source": "terms",
+      "target": "term.1",
+      "relation": "parent_of"
+    },
+    {
+      "source": "terms",
+      "target": "term.2",
+      "relation": "parent_of"
+    },
+    {
+      "source": "terms",
+      "target": "term.3",
+      "relation": "parent_of"
+    },
+    {
+      "source": "terms",
+      "target": "term.4",
+      "relation": "parent_of"
+    },
+    {
+      "source": "paper",
+      "target": "takeaways",
+      "relation": "parent_of"
+    },
+    {
+      "source": "takeaways",
+      "target": "takeaway.1",
+      "relation": "parent_of"
+    },
+    {
+      "source": "takeaways",
+      "target": "takeaway.2",
+      "relation": "parent_of"
+    },
+    {
+      "source": "takeaways",
+      "target": "takeaway.3",
+      "relation": "parent_of"
+    },
+    {
+      "source": "takeaways",
+      "target": "takeaway.4",
+      "relation": "parent_of"
+    }
+  ],
+  "meta": {
+    "generated_at": "2026-09-18T06:25:20.797076+00:00",
+    "generator_version": "paper-learning-map-0.1.0",
+    "project": "StartupBench"
+  }
+}
