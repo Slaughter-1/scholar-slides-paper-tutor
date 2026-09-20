@@ -26,18 +26,20 @@ Use Scholar-Slides only as a read-only upstream source. Maintain a one-way flow 
 2. Read `references/integration-and-evidence.md` and select Integrated or Standalone Mode.
 3. Select quick, deep, or research depth using `references/teaching-and-depth.md`.
 4. If Integrated, read the matching Scholar-Slides Mode A reading guide and use its navigation view; keep the upstream project read-only.
-5. Classify the paper by its primary contribution. If the benchmark, evaluation suite, task collection, or test environment is itself a primary contribution, treat it as a Benchmark paper; a method paper that merely reports benchmark scores remains a general paper. When a paper co-contributes a method and a new benchmark, let the main argument choose the primary structure; if both are equally central, retain the 16-field Benchmark Card as an index and add a compact method module with its inputs, objective, mechanism, and evidence.
-6. Build a logical model separating Paper Facts, Tutor Explanation, and Tutor Analysis.
-7. For a full-paper request, follow `references/output-contract.md` and create one `paper-tutor.md`. For a Benchmark paper, also read and apply `references/benchmark-paper.md` as the full-document schema.
-8. If the request is a complete-paper reading/review or asks for a reading card, learning assets, or reading completion, read `references/reading-completion.md` after the deep analysis. Project the existing analysis into the fixed Reading Card, fill only evidence-backed gaps, create the required assets, and run the completion gate.
-9. For a focused or follow-up request, answer only the requested part while reusing current paper context; do not trigger the completion gate or create the three assets unless the user also explicitly requests a complete-paper workflow.
-10. Check claims and uncertainty before delivery.
+5. If a matching `paper-map.json` and `tutor-state.json` are present, read `references/learning-map-integration.md` and enable the optional downstream sync only after the paper identity hashes match.
+6. Classify the paper by its primary contribution. If the benchmark, evaluation suite, task collection, or test environment is itself a primary contribution, treat it as a Benchmark paper; a method paper that merely reports benchmark scores remains a general paper. When a paper co-contributes a method and a new benchmark, let the main argument choose the primary structure; if both are equally central, retain the 16-field Benchmark Card as an index and add a compact method module with its inputs, objective, mechanism, and evidence.
+7. Build a logical model separating Paper Facts, Tutor Explanation, and Tutor Analysis. In integrated mode, stream the structured records through `scripts/learning_map_sync.py` as specified by `references/learning-map-integration.md` before generating Markdown projections; if the hook is unavailable, disclose the warning instead of claiming auto-sync.
+8. For a full-paper request, follow `references/output-contract.md` and create one `paper-tutor.md`. For a Benchmark paper, also read and apply `references/benchmark-paper.md` as the full-document schema.
+9. If the request is a complete-paper reading/review or asks for a reading card, learning assets, or reading completion, read `references/reading-completion.md` after the deep analysis. Project the existing analysis into the fixed Reading Card, fill only evidence-backed gaps, create the required assets, and run the completion gate.
+10. For a focused or follow-up request, answer only the requested part while reusing current paper context; when integrated, append the answer through the same Tutor writer and preserve unresolved questions rather than guessing an anchor.
+11. Check claims and uncertainty before delivery.
 
 ## Reference routing
 
 Always read `references/integration-and-evidence.md` before selecting a mode, combining sources, assigning claim types, or disclosing verification. In Integrated Mode, also read the matching Scholar-Slides `references/mode-a-reading.md` when available. Always read `references/teaching-and-depth.md` before choosing or changing depth, teaching a focused concept, or continuing a follow-up. Read `references/output-contract.md` for every full-paper output and whenever explaining a formula, figure, table, experiment, or ablation, or providing an evidence appendix. Read `references/validation-scenarios.md` when forward-testing this skill, diagnosing a behavior gap, or verifying a change against reusable scenarios.
 Read `references/benchmark-paper.md` whenever a benchmark, evaluation suite, task collection, or test environment is a primary paper contribution, including focused questions about its tasks, data, metrics, agents, scaling, failures, or validity.
 Read `references/reading-completion.md` only for a complete-paper reading/review workflow or when the user explicitly asks for the Reading Card, reading note, reconstructed method SVG, verification question, or completion status.
+Read `references/learning-map-integration.md` when a matching Paper Learning Map is present or when the user asks to synchronize Tutor analysis or follow-up Q&A into a learning map.
 
 ## Delivery check
 

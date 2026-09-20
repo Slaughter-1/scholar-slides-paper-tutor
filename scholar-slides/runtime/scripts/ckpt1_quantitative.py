@@ -56,3 +56,4 @@ def check_quantitative_compatibility(digest: Mapping[str, Any], candidate: Mappi
         "counts": counts,
         "missing_fields": missing_fields,
     }
+

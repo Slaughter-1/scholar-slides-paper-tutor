@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Paper Learning Map Tutor State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "paper_identity", "nodes"],
+  "properties": {
+    "schema_version": {"enum": ["1.0", "1.1"]},
+    "paper_identity": {"type": "object", "required": ["source_pdf_sha256"], "additionalProperties": false, "properties": {"source_pdf_sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}}},
+    "nodes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/state"}},
+    "unresolved_items": {"type": "array", "items": {"$ref": "#/$defs/unresolved"}},
+    "dedupe_report": {"$ref": "#/$defs/dedupe_report"}
+  },
+  "$defs": {
+    "state": {"type": "object", "additionalProperties": false, "properties": {"mathematical_meaning": {"type": "string"}, "intuition": {"type": "string"}, "necessity": {"type": "string"}, "example": {"type": "string"}, "analogy": {"type": "string"}, "prerequisites": {"type": "array", "items": {"type": "string"}}, "common_misunderstandings": {"type": "array", "items": {"type": "string"}}, "questions": {"type": "array", "items": {"type": "string"}}, "comprehension_checks": {"type": "array", "items": {"type": "string"}}, "map_items": {"type": "array", "items": {"$ref": "#/$defs/item"}}, "updated_at": {"type": "string"}}},
+    "item": {"type": "object", "additionalProperties": false, "required": ["id", "kind", "title", "summary", "body", "map_visible", "importance", "source_layer", "created_at", "updated_at"], "properties": {"id": {"type": "string", "minLength": 1}, "kind": {"enum": ["tutor_explanation", "mathematical_meaning", "intuition", "necessity", "prerequisite", "example", "analogy", "misconception", "user_question", "comprehension_check", "reader_analysis", "verification_question"]}, "title": {"type": "string", "minLength": 1}, "summary": {"type": "string"}, "body": {"type": "string"}, "map_visible": {"type": "boolean"}, "importance": {"enum": ["low", "medium", "high"]}, "source_layer": {"const": "tutor"}, "created_at": {"type": "string"}, "updated_at": {"type": "string"}, "tags": {"type": "array", "items": {"type": "string"}}, "origin": {"enum": ["full_analysis", "incremental_qa"]}, "question_id": {"type": "string"}, "question_ids": {"type": "array", "items": {"type": "string"}}, "question_variants": {"type": "array", "items": {"type": "string"}}, "related_item_ids": {"type": "array", "items": {"type": "string"}}, "dedupe_events": {"type": "array", "items": {"type": "object", "additionalProperties": true}}}},
+    "dedupe_report": {"type": "object", "additionalProperties": false, "properties": {"exact_dedupes": {"type": "integer", "minimum": 0}, "canonical_intent_dedupes": {"type": "integer", "minimum": 0}, "similarity_lite_dedupes": {"type": "integer", "minimum": 0}, "rejected_merges": {"type": "integer", "minimum": 0}, "events": {"type": "array", "items": {"type": "object", "additionalProperties": true}}}},
+    "unresolved": {"type": "object", "additionalProperties": false, "required": ["id", "kind", "title", "body", "candidate_node_ids", "reason", "created_at"], "properties": {"id": {"type": "string"}, "kind": {"type": "string"}, "title": {"type": "string"}, "body": {"type": "string"}, "candidate_node_ids": {"type": "array", "items": {"type": "string"}}, "reason": {"enum": ["no_anchor", "no_unique_anchor", "missing_node", "stale_node_id"]}, "created_at": {"type": "string"}}}
+  }
+}

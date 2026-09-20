@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "paper_identity": {
+    "title": "Reasoning-Table: Exploring Reinforcement Learning for Table Reasoning",
+    "source_pdf_sha256": "9bdcdb168bb4ee15d76e95522581b132f30b655bece7c8bd168b85efa216d112"
+  },
+  "source_bindings": [
+    {
+      "path": "D:/Users/16595/Documents/ChatGPT/进组准备/第一次论文阅读/03_Reasoning-Table/scholar-slides-analysis/source.pdf",
+      "sha256": "9bdcdb168bb4ee15d76e95522581b132f30b655bece7c8bd168b85efa216d112"
+    },
+    {
+      "path": "digest.json",
+      "sha256": "b1d94b0f5926a27c062b1b6c9650766d547a21f3b78e323e56a18b216c45a5d5"
+    }
+  ],
+  "language": "zh-CN",
+  "paper_type": {
+    "kind": "method",
+    "reason": "论文提出并分析面向表格推理任务的强化学习训练方法。"
+  },
+  "overview": {
+    "problem": {
+      "content": "表格推理需要定位单元格、计算并验证中间结果，直接生成答案容易把局部错误带到最后。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 1"
+      ]
+    },
+    "gap": {
+      "content": "单纯 SFT 受模仿数据和推理轨迹质量限制，难以同时获得深度推理、泛化与结构扰动鲁棒性。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 2"
+      ]
+    },
+    "approach": {
+      "content": "作者构造和筛选 Reason-SFT 轨迹，再用 GRPO 结合答案、格式和表格位置奖励优化策略，并比较四种训练分支。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 3",
+        "p. 4",
+        "p. 5"
+      ]
+    },
+    "insight": {
+      "content": "作者把推理冷启动与可验证奖励拆开比较，再用四种训练分支判断教师轨迹、RL 探索和二者组合各自贡献。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 5",
+        "p. 6"
+      ]
+    },
+    "findings": {
+      "content": "统一训练的 tableQA AVG 从 No-Reason SFT 的 49.80 提升到 Reason-SFT+RL 的 62.62；RL-zero 为 60.12，Reason-SFT 为 56.72。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 6"
+      ]
+    },
+    "boundary": {
+      "content": "结果支持受测任务和设置中的组合训练、泛化与扰动鲁棒性改善，但非 SQL 任务缺少代码执行模块，联合训练也受数据和奖励分布差异影响。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 8",
+        "p. 10"
+      ]
+    }
+  },
+  "mechanism_steps": [
+    {
+      "title": "定义任务和表格类型",
+      "purpose": "覆盖 tableQA、tableFV、table-to-text 和 text-to-SQL 四类任务。",
+      "input": "自然语言问题 Q 与一个或多个表格 T",
+      "output": "字符串/数字、真假标签、文本或 SQL 答案",
+      "necessity": "不同任务的可验证答案和表格结构决定后续奖励如何计算。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 3"
+      ]
+    },
+    {
+      "title": "构造并筛选 Reason-SFT 轨迹",
+      "purpose": "先提供可用的分步推理起点。",
+      "input": "原始数据集、外部大模型生成的多条轨迹",
+      "output": "保留答案正确且冗余较低的 reasoning traces",
+      "necessity": "轨迹质量影响冷启动，论文报告约 90.3% 的候选轨迹被过滤。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 3"
+      ]
+    },
+    {
+      "title": "设计表格感知奖励并用 GRPO 更新",
+      "purpose": "让模型根据答案正确性、输出结构和表格位置继续探索。",
+      "input": "候选输出、参考答案、位置标注和候选组",
+      "output": "RL-trained policy 与带推理、答案标签的输出",
+      "necessity": "位置奖励把最终答案和推理中引用的列/单元格联系起来，GRPO 用组内相对优势更新策略。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 4"
+      ]
+    },
+    {
+      "title": "比较四种训练分支",
+      "purpose": "把普通监督、推理冷启动、直接 RL 和组合训练的贡献分开。",
+      "input": "No-Reason SFT、Reason-SFT、RL-zero、Reason-SFT+RL 条件",
+      "output": "tableQA、text-to-SQL、跨域和扰动结果",
+      "necessity": "没有这些对照，就无法判断提升来自教师轨迹、RL 探索还是二者互补。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 5",
+        "p. 6"
+      ]
+    }
+  ],
+  "argument_chain": [
+    {
+      "node": "表格推理包含多步定位、计算和验证",
+      "relation": "说明单纯模仿可能受泛化和鲁棒性限制",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 1"
+      ]
+    },
+    {
+      "node": "Reason-SFT 提供筛选后的推理起点",
+      "relation": "降低组合训练开始时的探索难度",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 3"
+      ]
+    },
+    {
+      "node": "答案、格式和位置奖励共同进入 GRPO 训练",
+      "relation": "把最终正确性与表格证据一致性联系起来",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 4",
+        "p. 5"
+      ]
+    },
+    {
+      "node": "四种分支、奖励消融和扰动结果并不等价",
+      "relation": "限制对单一 GRPO 组件的因果归因",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 7",
+        "p. 8"
+      ]
+    }
+  ],
+  "decisive_evidence": [
+    {
+      "question": "联合训练是否提升 tableQA？",
+      "comparison": "统一 No-Reason SFT、Reason-SFT、RL-zero 和 Reason-SFT+RL",
+      "metric": "七个 tableQA 任务的算术平均 AVG",
+      "result": "AVG 分别为 49.80、56.72、60.12 和 62.62；Reason-SFT+RL 最高。",
+      "can_support": "RL-zero 能在没有教师推理轨迹时学习，Reason-SFT 冷启动还能进一步提高 RL。",
+      "cannot_support": "不能单凭 AVG 断言每个奖励或 GRPO 组件都独立必要。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 6"
+      ]
+    },
+    {
+      "question": "表格位置奖励是否有额外价值？",
+      "comparison": "去掉位置奖励与加入 λ1 = 0.2 的配置",
+      "metric": "BIRD、WikiTQ 和 TAT-QA 性能",
+      "result": "BIRD 提升 1.1%，WikiTQ 与 TAT-QA 约提升 0.6%；格式奖励整体影响较小。",
+      "can_support": "表格位置证据有助于把答案和推理引用的结构对齐。",
+      "cannot_support": "不能把位置奖励视为所有任务的主要提升来源。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 7"
+      ]
+    },
+    {
+      "question": "训练后的策略能否处理未见任务和结构变化？",
+      "comparison": "跨域数据集与原始/列/行/Both 表格扰动",
+      "metric": "AIT-QA、TableBench 和 Table 7 的性能及下降幅度",
+      "result": "统一 Reason-SFT+RL 在 AIT-QA/TableBench 为 91.33/60.72；Both 扰动下统一 SFT+RL 从 75.46 降到 68.20，统一 Reason-SFT 从 72.35 降到 57.66。",
+      "can_support": "RL 版本相对更能适应未见任务和结构扰动，但仍会下降。",
+      "cannot_support": "不能推出所有真实表格变换都不会失败。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 8"
+      ]
+    },
+    {
+      "question": "作者明确报告了哪些局限？",
+      "comparison": "非 SQL 任务的执行支持与多数据集联合训练",
+      "metric": "作者的局限性说明",
+      "result": "除 text-to-SQL 外缺少代码执行模块；联合训练可能因数据和奖励分布差异而低于单数据集训练。",
+      "can_support": "这些是结论适用范围和后续研究方向的直接边界。",
+      "cannot_support": "不能把未接入执行模块改写为所有结果都不可靠。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 10"
+      ]
+    }
+  ],
+  "terms": [
+    {
+      "term": "SFT / Reason-SFT",
+      "plain": "SFT 用标注输入—输出更新模型；Reason-SFT 额外使用筛选后的分步推理轨迹。",
+      "role": "作为普通监督基线或 RL 的冷启动。",
+      "confusions": "Reason-SFT 是数据/训练设置，不是 RL 算法，也不保证每条轨迹都正确。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 3"
+      ]
+    },
+    {
+      "term": "RL-zero",
+      "plain": "直接从基础模型用 GRPO 和任务奖励训练，不使用教师生成的推理轨迹。",
+      "role": "隔离 RL 自主探索相对 SFT 的贡献。",
+      "confusions": "zero 指没有 SFT 冷启动，不是随机初始化策略。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 5"
+      ]
+    },
+    {
+      "term": "GRPO",
+      "plain": "在同一问题的多条候选输出之间计算相对优势，再更新策略的优化方法。",
+      "role": "论文强化学习阶段的策略优化器。",
+      "confusions": "GRPO 是训练算法，不是表格数据集或推理任务。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 4"
+      ]
+    },
+    {
+      "term": "Position reward",
+      "plain": "比较模型标出的列/单元格集合 P 与标注集合 G 的交并比。",
+      "role": "鼓励答案和推理中引用的表格位置保持一致。",
+      "confusions": "位置对齐不等于答案一定正确，最终奖励仍由答案奖励优先约束。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 4"
+      ]
+    },
+    {
+      "term": "Schema linking",
+      "plain": "把自然语言问题中的需求映射到数据库或表格的列名、字段等结构。",
+      "role": "text-to-SQL 中用 gold SQL 的列名构造位置奖励。",
+      "confusions": "它是结构定位线索，不等于完整 SQL 执行或最终答案验证。",
+      "claim_type": "explanation",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 4"
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "kind": "author_contribution",
+      "content": "论文将答案、格式和位置奖励与 GRPO 训练组合起来，覆盖四类表格推理任务。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 2",
+        "p. 4"
+      ]
+    },
+    {
+      "kind": "author_contribution",
+      "content": "统一训练 tableQA AVG 中 Reason-SFT+RL 达到 62.62，超过 RL-zero 的 60.12 和 Reason-SFT 的 56.72。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 6"
+      ]
+    },
+    {
+      "kind": "explicit_limitation",
+      "content": "非 SQL 表格任务没有代码执行模块，可能引入幻觉和计算错误。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 10"
+      ]
+    },
+    {
+      "kind": "explicit_limitation",
+      "content": "多数据集联合训练的分布和奖励差异会使表现低于单数据集训练，数据比例仍缺少细粒度控制。",
+      "claim_type": "paper_fact",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 10"
+      ]
+    },
+    {
+      "kind": "reader_analysis",
+      "content": "最稳妥的因果表述是组合流程在受测设置下有效；要归因到单一组件，必须结合四分支、奖励消融和扰动对照。",
+      "claim_type": "analysis",
+      "availability": "supported",
+      "evidence_refs": [
+        "p. 6",
+        "p. 7",
+        "p. 8"
+      ]
+    }
+  ]
+}

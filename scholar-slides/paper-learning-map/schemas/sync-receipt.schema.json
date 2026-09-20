@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Paper Learning Map Sync Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_version", "event", "timestamp", "paper_sha256", "project",
+    "sync_attempted", "status", "records_received", "items_added",
+    "items_updated", "items_deduped", "unresolved_added", "unresolved_total",
+    "resolved_node_ids", "tutor_state_sha256_before", "tutor_state_sha256_after",
+    "study_state_sha256_before", "study_state_sha256_after", "study_state", "error", "reason"
+  ],
+  "properties": {
+    "receipt_version": {"const": "1.0"},
+    "event": {"enum": ["full_analysis_sync", "incremental_qa_sync", "sync_skipped", "sync_failed"]},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "paper_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}]},
+    "project": {"type": "string", "minLength": 1},
+    "sync_attempted": {"type": "boolean"},
+    "status": {"enum": ["success", "failed", "skipped"]},
+    "records_received": {"type": "integer", "minimum": 0},
+    "items_added": {"type": "integer", "minimum": 0},
+    "items_updated": {"type": "integer", "minimum": 0},
+    "items_deduped": {"type": "integer", "minimum": 0},
+    "unresolved_added": {"type": "integer", "minimum": 0},
+    "unresolved_total": {"type": "integer", "minimum": 0},
+    "resolved_node_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "tutor_state_sha256_before": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}]},
+    "tutor_state_sha256_after": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}]},
+    "study_state_sha256_before": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}]},
+    "study_state_sha256_after": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}]},
+    "study_state": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["node_id", "before", "after"], "properties": {
+          "node_id": {"type": ["string", "null"], "minLength": 1},
+          "before": {"enum": ["unseen", "learning", "understood", "mastered", null]},
+          "after": {"enum": ["unseen", "learning", "understood", "mastered", null]}
+        }}
+      ]
+    },
+    "error": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["type", "short_error"], "properties": {
+          "type": {"type": "string", "minLength": 1},
+          "short_error": {"type": "string", "minLength": 1, "maxLength": 240}
+        }}
+      ]
+    },
+    "reason": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 1}]}
+    ,"idempotency_key": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 8}]}
+    ,"retry_of": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 1}]}
+    ,"dedupe_report": {"anyOf": [{"type": "null"}, {"type": "object", "additionalProperties": true}]}
+  }
+}

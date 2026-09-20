@@ -1,0 +1,44 @@
+import { chromium } from "../runtime/node_modules/playwright/index.mjs";
+import { mkdir } from "node:fs/promises";
+import path from "node:path";
+
+const root = process.cwd();
+const qa = path.join(root, "paper-learning-map", "qa-screenshots");
+await mkdir(qa, { recursive: true });
+const browser = await chromium.launch({ headless: true });
+for (const [width, height] of [[1440, 900], [1920, 1080]]) {
+  const page = await browser.newPage({ viewport: { width, height } });
+  const errors = [];
+  page.on("pageerror", error => errors.push(String(error)));
+  await page.goto(`file://${path.join(root, "paper-learning-map", "fixtures", "Reasoning-Table", "output", "paper-learning-map.html")}`);
+  await page.waitForTimeout(100);
+  const dbl = async id => { await page.evaluate(nodeId => document.querySelector(`svg g[data-id="${nodeId}"]`)?.dispatchEvent(new MouseEvent("dblclick", { bubbles: true })), id); await page.waitForTimeout(50); };
+  const key = await page.evaluate(() => ({ mode: document.querySelector("#tutor-layer").value, groups: document.querySelectorAll("svg .tutor-group").length, items: document.querySelectorAll("svg .tutor-item").length }));
+  await page.screenshot({ path: path.join(qa, `Reasoning-Table-${width}x${height}-tutor-key.png`), fullPage: true });
+  await dbl("method");
+  await dbl("method.step_3");
+  const group = page.locator('svg g[data-id="visual.tutor.group.method.step_3"]');
+  await dbl("visual.tutor.group.method.step_3");
+  const keyExpanded = await page.locator("svg .tutor-item").count();
+  await page.locator('svg g[data-id^="visual.tutor.item."]').first().dispatchEvent("click");
+  const drawerText = await page.locator("#detail").innerText();
+  const tutorDrawer = drawerText.includes("Tutor") || drawerText.includes("来源边界");
+  await page.screenshot({ path: path.join(qa, `Reasoning-Table-${width}x${height}-tutor-drawer.png`), fullPage: true });
+  await page.locator("#close").click();
+  await page.locator("#tutor-layer").selectOption("off");
+  const off = await page.evaluate(() => ({ mode: document.querySelector("#tutor-layer").value, groups: document.querySelectorAll("svg .tutor-group").length, items: document.querySelectorAll("svg .tutor-item").length }));
+  await page.locator("#tutor-layer").selectOption("all");
+  await dbl("method");
+  await dbl("method.step_3");
+  await dbl("visual.tutor.group.method.step_3");
+  const all = await page.evaluate(() => ({ mode: document.querySelector("#tutor-layer").value, groups: document.querySelectorAll("svg .tutor-group").length, items: document.querySelectorAll("svg .tutor-item").length }));
+  await page.locator("#search").fill("公式含义");
+  await page.waitForTimeout(100);
+  const search = await page.evaluate(() => ({ drawer: document.querySelector("#drawer").classList.contains("open"), selected: document.querySelector("svg .node.selected")?.parentElement?.dataset.id || "", visibleItems: [...document.querySelectorAll("svg g[data-id^='visual.tutor.item.']")].map(n => n.dataset.id) }));
+  await page.locator("#theme").click();
+  const dark = await page.evaluate(() => ({ dark: document.body.classList.contains("dark"), blackFacts: [...document.querySelectorAll("svg .node.fact")].filter(n => getComputedStyle(n).fill === "rgb(0, 0, 0)").length }));
+  await page.screenshot({ path: path.join(qa, `Reasoning-Table-${width}x${height}-tutor-all-dark.png`), fullPage: true });
+  console.log(JSON.stringify({ width, height, key, keyExpanded, tutorDrawer, off, all, search, dark, errors }));
+  await page.close();
+}
+await browser.close();

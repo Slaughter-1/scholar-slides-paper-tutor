@@ -1,0 +1,359 @@
+{
+  "schema_version": "1.1",
+  "paper_identity": {
+    "source_pdf_sha256": "9bdcdb168bb4ee15d76e95522581b132f30b655bece7c8bd168b85efa216d112"
+  },
+  "nodes": {
+    "overview.problem": {
+      "map_items": [
+        {
+          "id": "tutor.overview.problem.tutor_explanation.a1b085adf4",
+          "kind": "tutor_explanation",
+          "title": "问题的直觉",
+          "summary": "表格推理不仅要答对，还要定位支持答案的结构证据。",
+          "body": "Tutor Explanation：一个表格问题可能需要定位列、单元格并验证中间计算。直接生成最终答案时，局部定位错误会一路传到结论。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369565+00:00",
+          "updated_at": "2026-09-18T07:27:31.369565+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369565+00:00"
+    },
+    "overview.gap": {
+      "map_items": [
+        {
+          "id": "tutor.overview.gap.necessity.575fa0cbe1",
+          "kind": "necessity",
+          "title": "为什么需要冷启动与 RL",
+          "summary": "SFT 轨迹质量和模仿边界限制了后续泛化。",
+          "body": "Tutor Explanation：Reason-SFT 提供可用的分步推理起点，RL 再利用可验证奖励探索更好的输出；两者解决的是不同阶段的问题。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369672+00:00",
+          "updated_at": "2026-09-18T07:27:31.369672+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369672+00:00"
+    },
+    "overview.insight": {
+      "map_items": [
+        {
+          "id": "tutor.overview.insight.reader_analysis.b3e1c514da",
+          "kind": "reader_analysis",
+          "title": "这篇论文真正拆开的变量",
+          "summary": "教师轨迹、RL 探索和组合训练被四种分支分开比较。",
+          "body": "Tutor Analysis：最稳妥的阅读方式是把四分支看作归因设计，而不是把最终分数直接归给某一个奖励或算法。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369693+00:00",
+          "updated_at": "2026-09-18T07:27:31.369693+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369693+00:00"
+    },
+    "method.step_1": {
+      "map_items": [
+        {
+          "id": "tutor.method.step_1.mathematical_meaning.bad0bd45d8",
+          "kind": "mathematical_meaning",
+          "title": "四类任务为什么要先分清",
+          "summary": "任务输出类型决定奖励能否被验证。",
+          "body": "Tutor Explanation：tableQA、tableFV、table-to-text 和 text-to-SQL 的输出分别可能是答案、真假标签、文本或 SQL；后续答案奖励和位置奖励必须知道自己在验证什么。",
+          "map_visible": false,
+          "importance": "medium",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369706+00:00",
+          "updated_at": "2026-09-18T07:27:31.369706+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369706+00:00"
+    },
+    "method.step_2": {
+      "map_items": [
+        {
+          "id": "tutor.method.step_2.intuition.d088cde5ea",
+          "kind": "intuition",
+          "title": "Reason-SFT 像一个可用的起跑线",
+          "summary": "筛选后的推理轨迹减少 RL 从无效输出开始探索的成本。",
+          "body": "Tutor Explanation：外部模型生成多条轨迹后，保留答案正确且冗余较低的轨迹，给策略一个可学习的分步推理起点。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369718+00:00",
+          "updated_at": "2026-09-18T07:27:31.369718+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369718+00:00"
+    },
+    "method.step_3": {
+      "map_items": [
+        {
+          "id": "tutor.method.step_3.necessity.245cf04e7d",
+          "kind": "necessity",
+          "title": "Position Reward 为什么存在",
+          "summary": "它把最终答案和推理中引用的表格位置联系起来。",
+          "body": "Tutor Explanation：位置奖励比较模型标出的列或单元格集合 P 与标注集合 G 的交并比。它补充答案正确性，鼓励模型指出支持推理的结构位置，但位置对齐本身不等于答案一定正确。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369730+00:00",
+          "updated_at": "2026-09-18T07:27:31.369730+00:00",
+          "origin": "full_analysis"
+        },
+        {
+          "id": "tutor.method.step_3.intuition.6fdd195ca7",
+          "kind": "intuition",
+          "title": "GRPO 奖励如何共同工作",
+          "summary": "同题候选输出之间比较相对优势，再更新策略。",
+          "body": "Tutor Explanation：答案、格式和位置奖励先评价候选输出，GRPO 再在同一问题的候选组内比较相对优势。这样既约束最终结果，也约束输出结构和证据引用。",
+          "map_visible": false,
+          "importance": "medium",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369741+00:00",
+          "updated_at": "2026-09-18T07:27:31.369741+00:00",
+          "origin": "full_analysis"
+        },
+        {
+          "id": "tutor.method.step_3.user_question.049025c4ba",
+          "kind": "user_question",
+          "title": "GRPO 奖励如何共同工作？",
+          "summary": "答案、格式和位置奖励先评价候选输出，GRPO 再比较同题候选的相对优势。",
+          "body": "答案、格式和位置奖励先评价候选输出，GRPO 再比较同题候选的相对优势。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.769784+00:00",
+          "updated_at": "2026-09-18T07:27:31.769784+00:00",
+          "question_id": "question.62a8d0640d",
+          "origin": "incremental_qa"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.769784+00:00",
+      "questions": [
+        "GRPO 奖励如何共同工作？"
+      ]
+    },
+    "method.step_4": {
+      "map_items": [
+        {
+          "id": "tutor.method.step_4.reader_analysis.6311fa73e9",
+          "kind": "reader_analysis",
+          "title": "四分支是归因工具",
+          "summary": "No-Reason SFT、Reason-SFT、RL-zero 和组合训练隔离不同来源。",
+          "body": "Tutor Analysis：没有这组对照，就无法区分教师轨迹带来的冷启动收益、RL 自主探索收益以及二者是否互补。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369754+00:00",
+          "updated_at": "2026-09-18T07:27:31.369754+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369754+00:00"
+    },
+    "evidence.block_1": {
+      "map_items": [
+        {
+          "id": "tutor.evidence.block_1.tutor_explanation.180ad19fbd",
+          "kind": "tutor_explanation",
+          "title": "如何读 AVG 结果",
+          "summary": "组合训练在七个 tableQA 任务的平均分最高。",
+          "body": "Tutor Explanation：No-Reason SFT、Reason-SFT、RL-zero 和 Reason-SFT+RL 的 AVG 分别为 49.80、56.72、60.12 和 62.62。这个结果支持组合训练在受测设置下有效。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369763+00:00",
+          "updated_at": "2026-09-18T07:27:31.369763+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369763+00:00"
+    },
+    "evidence.block_2": {
+      "map_items": [
+        {
+          "id": "tutor.evidence.block_2.reader_analysis.a14a6bbf10",
+          "kind": "reader_analysis",
+          "title": "位置消融能说明什么",
+          "summary": "位置奖励有额外价值，但不是所有提升的唯一来源。",
+          "body": "Tutor Analysis：BIRD 提升 1.1%，WikiTQ 与 TAT-QA 约提升 0.6%，支持位置证据有帮助；不能据此把全部提升归因给 Position Reward。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369775+00:00",
+          "updated_at": "2026-09-18T07:27:31.369775+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369775+00:00"
+    },
+    "evidence.block_3": {
+      "map_items": [
+        {
+          "id": "tutor.evidence.block_3.misconception.df003c215f",
+          "kind": "misconception",
+          "title": "泛化提升不等于不会失败",
+          "summary": "RL 版本更能适应未见任务和扰动，但扰动下仍会下降。",
+          "body": "Tutor Analysis：跨域和结构扰动结果支持相对更强的适应性，不能推出所有真实表格变换都不会失败。",
+          "map_visible": false,
+          "importance": "medium",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369784+00:00",
+          "updated_at": "2026-09-18T07:27:31.369784+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369784+00:00",
+      "common_misunderstandings": [
+        "Tutor Analysis：跨域和结构扰动结果支持相对更强的适应性，不能推出所有真实表格变换都不会失败。"
+      ]
+    },
+    "term.1": {
+      "map_items": [
+        {
+          "id": "tutor.term.1.misconception.920fc7c566",
+          "kind": "misconception",
+          "title": "Reason-SFT 不是 RL 算法",
+          "summary": "它是带筛选推理轨迹的监督训练设置。",
+          "body": "Tutor Explanation：Reason-SFT 使用筛选后的分步轨迹做监督学习，作用是冷启动；它不等于 GRPO，也不保证每条轨迹都正确。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369794+00:00",
+          "updated_at": "2026-09-18T07:27:31.369794+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369794+00:00",
+      "common_misunderstandings": [
+        "Tutor Explanation：Reason-SFT 使用筛选后的分步轨迹做监督学习，作用是冷启动；它不等于 GRPO，也不保证每条轨迹都正确。"
+      ]
+    },
+    "term.3": {
+      "map_items": [
+        {
+          "id": "tutor.term.3.intuition.5109c00776",
+          "kind": "intuition",
+          "title": "GRPO 的一句话直觉",
+          "summary": "同题候选之间的相对比较提供更新方向。",
+          "body": "Tutor Explanation：GRPO 不是数据集或任务，而是强化学习阶段的策略优化器；它用候选组内相对优势减少对绝对价值标定的依赖。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369806+00:00",
+          "updated_at": "2026-09-18T07:27:31.369806+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369806+00:00"
+    },
+    "term.4": {
+      "map_items": [
+        {
+          "id": "tutor.term.4.mathematical_meaning.fc5bf54dfc",
+          "kind": "mathematical_meaning",
+          "title": "Position Reward 的公式含义",
+          "summary": "用 P 与 G 的交并比度量位置集合对齐。",
+          "body": "Tutor Explanation：P 是模型指出的列或单元格集合，G 是标注集合；交并比越高，说明引用位置与目标结构越一致。它衡量证据定位，不替代答案正确性。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369816+00:00",
+          "updated_at": "2026-09-18T07:27:31.369816+00:00",
+          "origin": "full_analysis"
+        },
+        {
+          "id": "tutor.term.4.user_question.198901f7da",
+          "kind": "user_question",
+          "title": "Position reward 为什么有作用？",
+          "summary": "它把最终答案和推理引用的列或单元格联系起来，补充答案正确性。",
+          "body": "它把最终答案和推理引用的列或单元格联系起来，补充答案正确性。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.570703+00:00",
+          "updated_at": "2026-09-18T07:27:31.570703+00:00",
+          "question_id": "question.15756a3aee",
+          "origin": "incremental_qa"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.570703+00:00",
+      "questions": [
+        "Position reward 为什么有作用？"
+      ]
+    },
+    "overview.boundary": {
+      "map_items": [
+        {
+          "id": "tutor.overview.boundary.reader_analysis.7d7f1f642a",
+          "kind": "reader_analysis",
+          "title": "结论边界",
+          "summary": "结果支持受测设置中的改善，不能外推为无条件可靠。",
+          "body": "Tutor Analysis：非 SQL 任务缺少代码执行模块，多数据集联合训练还受数据与奖励分布差异影响；这些限制应和总体提升一起阅读。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369826+00:00",
+          "updated_at": "2026-09-18T07:27:31.369826+00:00",
+          "origin": "full_analysis"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.369826+00:00"
+    },
+    "takeaway.5": {
+      "map_items": [
+        {
+          "id": "tutor.takeaway.5.reader_analysis.b016a706ff",
+          "kind": "reader_analysis",
+          "title": "不要把全部提升归因给 GRPO",
+          "summary": "组合有效与单一组件必要是两个不同问题。",
+          "body": "Tutor Analysis：应结合四分支、位置奖励消融和扰动对照，才能讨论组件贡献；当前证据支持的是受测设置下的组合流程。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.369835+00:00",
+          "updated_at": "2026-09-18T07:27:31.369835+00:00",
+          "origin": "full_analysis"
+        },
+        {
+          "id": "tutor.takeaway.5.user_question.11e9ed1d69",
+          "kind": "user_question",
+          "title": "能否把全部提升归因给 GRPO？",
+          "summary": "不能；需要结合四分支、奖励消融和扰动结果。",
+          "body": "不能；需要结合四分支、奖励消融和扰动结果。",
+          "map_visible": true,
+          "importance": "high",
+          "source_layer": "tutor",
+          "created_at": "2026-09-18T07:27:31.964156+00:00",
+          "updated_at": "2026-09-18T07:27:31.964156+00:00",
+          "question_id": "question.776bd390bc",
+          "origin": "incremental_qa"
+        }
+      ],
+      "updated_at": "2026-09-18T07:27:31.964156+00:00",
+      "questions": [
+        "能否把全部提升归因给 GRPO？"
+      ]
+    }
+  },
+  "unresolved_items": [
+    {
+      "id": "unresolved.a321a0688a",
+      "kind": "user_question",
+      "title": "M 是什么意思？",
+      "body": "当前上下文不足，无法安全绑定。",
+      "candidate_node_ids": [],
+      "reason": "no_anchor",
+      "created_at": "2026-09-18T07:27:32.155826+00:00"
+    }
+  ]
+}
