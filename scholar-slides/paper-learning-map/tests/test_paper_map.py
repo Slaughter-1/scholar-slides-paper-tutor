@@ -7,15 +7,17 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from fixture_support import make_portable_fixture
+
 ROOT = Path(__file__).resolve().parents[2]
 MAP = ROOT / "paper-learning-map"
 
 
 class PaperMapTests(unittest.TestCase):
     def test_reasoning_table_projection_and_render(self) -> None:
-        project = ROOT / "paper-learning-map" / "fixtures" / "Reasoning-Table"
         with tempfile.TemporaryDirectory() as raw:
-            out = Path(raw)
+            project = make_portable_fixture("Reasoning-Table", Path(raw))
+            out = Path(raw) / "output"
             subprocess.run([sys.executable, str(MAP / "runtime" / "build_paper_map.py"), "--project", str(project), "--out", str(out)], check=True)
             subprocess.run([sys.executable, str(MAP / "runtime" / "render_paper_map.py"), "--project", str(out)], check=True)
             data = json.loads((out / "paper-map.json").read_text(encoding="utf-8"))
@@ -26,28 +28,28 @@ class PaperMapTests(unittest.TestCase):
             self.assertIn("Reasoning-Table", (out / "paper-learning-map.html").read_text(encoding="utf-8"))
 
     def test_startupbench_benchmark_nodes(self) -> None:
-        project = ROOT / "paper-learning-map" / "fixtures" / "StartupBench"
         with tempfile.TemporaryDirectory() as raw:
-            out = Path(raw)
+            project = make_portable_fixture("StartupBench", Path(raw))
+            out = Path(raw) / "output"
             subprocess.run([sys.executable, str(MAP / "runtime" / "build_paper_map.py"), "--project", str(project), "--out", str(out)], check=True)
             data = json.loads((out / "paper-map.json").read_text(encoding="utf-8"))
             self.assertEqual(data["paper_type"], "benchmark")
             self.assertTrue(any(node["node_type"] == "experiment" for node in data["nodes"]))
 
     def test_unconfirmed_upstream_fails_closed_to_tutor_only(self) -> None:
-        project = ROOT / "paper-learning-map" / "fixtures" / "Reasoning-Table"
         with tempfile.TemporaryDirectory() as raw:
-            out = Path(raw)
+            project = make_portable_fixture("Reasoning-Table", Path(raw))
+            out = Path(raw) / "output"
             subprocess.run([sys.executable, str(MAP / "runtime" / "build_paper_map.py"), "--project", str(project), "--out", str(out)], check=True)
             data = json.loads((out / "paper-map.json").read_text(encoding="utf-8"))
             self.assertEqual(data["source"]["mode"], "integrated")
             self.assertEqual(data["source"]["verification_level"], "tutor_only")
 
     def test_downstream_state_does_not_change_reading_view(self) -> None:
-        project = ROOT / "paper-learning-map" / "fixtures" / "StartupBench"
-        source = (project / "reading-view.json").read_bytes()
         with tempfile.TemporaryDirectory() as raw:
-            out = Path(raw)
+            project = make_portable_fixture("StartupBench", Path(raw))
+            source = (project / "reading-view.json").read_bytes()
+            out = Path(raw) / "output"
             subprocess.run([sys.executable, str(MAP / "runtime" / "build_paper_map.py"), "--project", str(project), "--out", str(out)], check=True)
             subprocess.run([sys.executable, str(MAP / "runtime" / "update_learning_state.py"), "--project", str(out), "mark-understood", "overview.problem"], check=True)
             self.assertEqual(source, (project / "reading-view.json").read_bytes())
@@ -70,9 +72,9 @@ class PaperMapTests(unittest.TestCase):
         self.assertLess(len(source), 8000)
 
     def test_tutor_state_full_and_incremental_sync(self) -> None:
-        project = ROOT / "paper-learning-map" / "fixtures" / "Reasoning-Table"
         with tempfile.TemporaryDirectory() as raw:
-            out = Path(raw)
+            project = make_portable_fixture("Reasoning-Table", Path(raw))
+            out = Path(raw) / "output"
             subprocess.run([sys.executable, str(MAP / "runtime" / "build_paper_map.py"), "--project", str(project), "--out", str(out)], check=True)
             records = [
                 {"node_id": "overview.problem", "kind": "tutor_explanation", "title": "为什么需要表格定位", "summary": "答案之外还要检查证据位置。", "body": "Tutor Explanation：定位中间证据可以减少局部错误传到最终答案。", "map_visible": True, "importance": "high"},

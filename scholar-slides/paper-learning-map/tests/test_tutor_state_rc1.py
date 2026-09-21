@@ -9,6 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from jsonschema import Draft202012Validator
+from fixture_support import make_portable_fixture
 
 ROOT = Path(__file__).resolve().parents[2]
 MAP = ROOT / "paper-learning-map"
@@ -21,14 +22,15 @@ from tutor_state import TutorStateStore, _atomic_json, _validate_study_state  # 
 class TutorStateRC1Tests(unittest.TestCase):
     def make_project(self) -> Path:
         temp = Path(tempfile.mkdtemp())
-        source = MAP / "fixtures" / "Reasoning-Table"
+        source = make_portable_fixture("Reasoning-Table", temp)
+        output = temp / "output"
         subprocess = __import__("subprocess")
         subprocess.run(
-            [sys.executable, str(MAP / "runtime" / "build_paper_map.py"), "--project", str(source), "--out", str(temp)],
+            [sys.executable, str(MAP / "runtime" / "build_paper_map.py"), "--project", str(source), "--out", str(output)],
             check=True,
         )
         self.addCleanup(shutil.rmtree, temp, ignore_errors=True)
-        return temp
+        return output
 
     def test_first_question_moves_only_unseen_to_learning(self) -> None:
         project = self.make_project()

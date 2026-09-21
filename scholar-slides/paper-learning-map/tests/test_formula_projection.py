@@ -49,6 +49,8 @@ class FormulaProjectionTests(unittest.TestCase):
 
     def test_swe_touch_eq3_is_stable_and_source_bound(self) -> None:
         root = ROOT / "docs" / "e2e-validation" / "verified-fresh" / "swe-touch"
+        if not (root / "learning-map-rc1-verified" / "paper-map.json").is_file():
+            self.skipTest("optional SWE-Touch verified fixture is not included in the public checkout")
         paper_map = load_json(root / "learning-map-rc1-verified" / "paper-map.json")
         tutor_state = load_json(root / "learning-map-rc1-verified" / "tutor-state.json")
         view = load_json(root / "scholar" / "reading-view.json")
