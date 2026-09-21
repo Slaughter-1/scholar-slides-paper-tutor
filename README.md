@@ -4,9 +4,9 @@ Evidence-grounded academic paper analysis, teaching, presentations, and source-b
 
 ## Packages
 
-- `scholar-slides/`: PDF/source ingestion, evidence resolver, reading view, CKPT-1 and CKPT-2 gates, slide planning, speaker notes, export, and offline QA.
-- `paper-tutor/`: integrated or standalone paper teaching at quick, deep, and research depth, with explicit Paper Fact, Tutor Explanation, and Tutor Analysis layers.
-- `scholar-slides/paper-learning-map/`: source-bound map projection, formula index and offline KaTeX rendering, tutor-state synchronization, study state, unresolved-question tracking, and hash-bound receipts.
+- [`scholar-slides/`](scholar-slides/README.md): PDF/source ingestion, evidence resolver, narrative reading view, CKPT-1 and CKPT-2 gates, slide planning, speaker notes, export, and offline QA.
+- [`paper-tutor/`](paper-tutor/README.md): integrated or standalone paper teaching at quick, deep, and research depth, with explicit Paper Fact, Tutor Explanation, and Tutor Analysis layers.
+- [`scholar-slides/paper-learning-map/`](scholar-slides/paper-learning-map/README.md): source-grounded graph projection, offline formula rendering, Tutor Layer synchronization, study state, unresolved-question tracking, and hash-bound receipts.
 
 The data flow is one way:
 
@@ -17,6 +17,12 @@ paper source -> Scholar-Slides evidence and reading view
 ```
 
 Downstream outputs do not write back into the source reading view, digest, or checkpoint records.
+
+## Which layer should I use?
+
+Use Scholar-Slides when you need source identity, evidence locations, checkpoint gates, quantitative coverage, or a presentation. Use Paper-Tutor when you need a detailed explanation that follows the paper's argument and adapts to a reader's level. Use Paper Learning Map when you want the paper's nodes and relations to remain navigable across later questions and study sessions.
+
+For the richest full-paper result, build the Scholar-Slides reading view first, then produce the long Paper-Tutor explanation, then render the Learning Map. The map is an index and study surface; it does not replace the narrative explanation.
 
 ## Install on Windows
 

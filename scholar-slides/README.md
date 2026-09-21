@@ -1,64 +1,72 @@
-# Scholar-Slides + Paper-Tutor
+# Scholar-Slides
 
-Evidence-grounded academic paper analysis, teaching, presentations, and source-bound learning maps for Codex. The current release is Scholar-Slides **0.4.0**.
+Scholar-Slides is the source and evidence layer for academic paper analysis, teaching, presentations, and downstream learning maps. It is designed to make a paper understandable without losing track of what the source actually supports.
 
-## Packages
-
-- `scholar-slides/`: PDF/source ingestion, evidence resolver, reading view, CKPT-1 and CKPT-2 gates, slide planning, speaker notes, export, and offline QA.
-- `paper-tutor/`: integrated or standalone paper teaching at quick, deep, and research depth, with explicit Paper Fact, Tutor Explanation, and Tutor Analysis layers.
-- `scholar-slides/paper-learning-map/`: source-bound map projection, formula index and offline KaTeX rendering, tutor-state synchronization, study state, unresolved-question tracking, and hash-bound receipts.
-
-The data flow is one way:
+## End-to-end flow
 
 ```text
-paper source -> Scholar-Slides evidence and reading view
-             -> Paper-Tutor and Learning Map projections
-             -> slides, notes, and study state
+PDF / arXiv source
+  -> source bundle and digest
+  -> validated Mode A reading-view.json
+  -> paper-analysis.md and Paper-Tutor explanation
+  -> optional Paper Learning Map
+  -> CKPT-1-confirmed presentation workflow
 ```
 
-Downstream outputs do not write back into the source reading view, digest, or checkpoint records.
+The data flow is one-way. Downstream Markdown, maps, tutor state, and slides must not write back into `digest.json`, `reading-view.json`, or checkpoint records.
 
-## Install on Windows
+## Install and health check
 
-From a checkout of this repository, run:
+From a repository checkout:
 
 ```powershell
 .\scripts\install.ps1
-```
-
-The installer backs up existing installations, installs the packages to `%USERPROFILE%\.agents\skills\scholar-slides` and `%USERPROFILE%\.codex\skills\paper-tutor`, creates the Scholar-Slides Python environment, installs Node dependencies, and installs Playwright Chromium. Use `-SkipPlaywright` only when browser QA is not required.
-
-Projects belong in user-selected output directories, never inside an installed skill. The bundle resolves resources relative to its own installation and does not depend on a fixed machine path.
-
-## Scholar-Slides
-
-Check the installation:
-
-```powershell
 scholar-slides --version
 scholar-slides doctor --json
 ```
 
-For Chinese PDF/PPTX export, require a verified CJK font explicitly:
+The current release is `0.4.0`. `doctor.ok` must be true before a long build. For Chinese documents and slides, confirm that the CJK font check passes.
+
+## Mode A: source-grounded reading
+
+Build a project from a PDF or arXiv identifier:
 
 ```powershell
-scholar-slides doctor --json --require-cjk
+scholar-slides build `
+  --input "C:\papers\paper.pdf" `
+  --project "C:\papers\paper-project"
 ```
 
-Build a source-bound project:
+Mode A produces a source bundle, extractive digest, figures/tables, and a pending CKPT-1 review state. A validated `reading-view.json` is the navigation layer for the first reading. It should contain:
+
+- a 30-second overview with problem, gap, approach, insight, findings, and boundary;
+- concrete input → processing → output mechanism steps;
+- a separate argument chain from background to conclusion;
+- 2–4 decisive evidence blocks with comparisons, metrics, results, and limits;
+- only the terms that block understanding;
+- claim type, availability, and evidence references for every substantive item.
+
+The reading view is not a second abstract. Its job is to preserve the paper's causal and argumentative spine so Paper-Tutor and Learning Map can expand it without inventing a new story.
+
+## Evidence and checkpoints
+
+Evidence locators may refer to pages, sections, figures, tables, equations, or appendices. Each locator is resolved as `exact`, `normalized`, `fuzzy`, `partial`, `ambiguous`, or `unresolved`. Ambiguous and unresolved evidence remains visible and blocks any claim that depends on it.
+
+Prepare, but do not approve, a CKPT-1 review package with:
 
 ```powershell
-scholar-slides build --input "C:\papers\paper.pdf" --project "C:\papers\paper-project"
+scholar-slides prepare-checkpoint `
+  --project "C:\papers\paper-project" `
+  --checkpoint CKPT-1 `
+  --review-input "C:\papers\review-input.json" `
+  --prepared-by "Codex"
 ```
 
-Prepare CKPT-1 without recording approval:
+Only an explicit human decision may approve CKPT-1. A pending CKPT-1 does not block an already authorized explanation, but it blocks workflows that require a confirmed reviewed view.
 
-```powershell
-scholar-slides prepare-checkpoint --project "C:\papers\paper-project" `
-  --checkpoint CKPT-1 --review-input "C:\papers\review-input.json" --prepared-by Codex
-```
+## Mode B: presentations
 
-Only an explicit human or user-authorized decision can approve CKPT-1. A source hash change makes the review stale. After CKPT-1 is confirmed:
+After CKPT-1 is confirmed:
 
 ```powershell
 scholar-slides build --project "C:\papers\paper-project" --resume
@@ -66,41 +74,26 @@ scholar-slides review --project "C:\papers\paper-project"
 scholar-slides export --project "C:\papers\paper-project" --formats html,pdf,pptx,notes
 ```
 
-Export remains gated by CKPT-2. Blocking evidence, stale bindings, missing quantitative facts, and failed QA fail closed.
+Presentation generation has its own CKPT-2 review. Do not export an unconfirmed deck, and do not overwrite an approved deck without using the documented reopen lifecycle.
 
-## Evidence resolver
+## Paper Learning Map
 
-The resolver supports page, page range, section, figure, table, equation, appendix, and mixed locators. It distinguishes PDF page index, printed page label, and source page reference. Every locator ends in an explicit status: `exact`, `normalized`, `fuzzy`, `partial`, `ambiguous`, or `unresolved`.
-
-`ambiguous` and `unresolved` evidence is never guessed automatically. Locator parsing is followed by evidence-span validation. Producer bugs and resolver gaps are recorded separately, and paper-specific locator exceptions are prohibited.
-
-## Paper-Tutor
-
-In Integrated Mode, Paper-Tutor consumes a matching Scholar-Slides reading view and evidence set while keeping the upstream project read-only. In Standalone Mode it states that Scholar-Slides CKPT-1 verification was unavailable. Paper Facts, Tutor Explanation, and Tutor Analysis remain visibly distinct; unsupported claims stay unavailable, unverifiable, or analytical.
-
-The structured Learning Map bridge is available as:
-
-```powershell
-$recordsJson | python paper-tutor/scripts/learning_map_sync.py `
-  --project "C:\papers\paper-map" `
-  --map-root "C:\path\to\scholar-slides\paper-learning-map" `
-  --origin full_analysis
-```
-
-## Learning Map and formulas
+Build the source-grounded map only after a valid `reading-view.json` exists:
 
 ```powershell
 python scholar-slides/paper-learning-map/runtime/build_paper_map.py `
-  --project "C:\papers\paper-project" --out "C:\papers\paper-map"
+  --project "C:\papers\paper-project" `
+  --out "C:\papers\paper-map"
+
 python scholar-slides/paper-learning-map/runtime/render_paper_map.py `
   --project "C:\papers\paper-map"
 ```
 
-The map renders formulas offline and retains raw LaTeX plus a fallback when parsing fails. Formula indexes are rejected when identity or validation level does not match. Only downstream tutor and study state is writable.
+The generated map contains `paper-map.json`, `tutor-state.json`, `study-state.json`, and `paper-learning-map.html`. `paper-map.json` is source-grounded and immutable downstream; `tutor-state.json` and `study-state.json` are the writable learning layers. Formula rendering is offline and identity-bound.
 
 ## Validation
 
-The repository contains runnable unit tests:
+Run the repository checks after documentation or runtime changes:
 
 ```powershell
 python scripts/validate_skills.py scholar-slides paper-tutor
@@ -109,10 +102,4 @@ python -m unittest discover -s scholar-slides/tests -q
 python -m unittest discover -s scholar-slides/paper-learning-map/tests -q
 ```
 
-Six deep-output tests require generated SWE-Touch, Reasoning-Table, or CKPT-1 closeout artifacts and are skipped with an explicit reason when those optional artifacts are absent. CI installs dependencies and Chromium, runs all available tests, validates metadata, runs the public-release audit, and executes the CLI doctor.
-
-The current CKPT-1 baseline is immutable. Evidence status, review decisions, promotion provenance, and `partial` states belong to a new checkpoint rather than a rewrite of CKPT-1.
-
-## Public-release audit
-
-Run `scripts/audit_public_release.py` before publishing. It checks tracked files for credentials, private keys, and oversized artifacts. Sample fixtures are included for regression coverage; review their licensing and distribution suitability before adding new source material.
+If a check is skipped because an optional artifact is absent, report the skip explicitly. Never turn a pending, partial, or unresolved source state into a confirmed claim.
