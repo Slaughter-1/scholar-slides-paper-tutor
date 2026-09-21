@@ -15,15 +15,17 @@ RUNTIME = MAP / "runtime"
 sys.path.insert(0, str(RUNTIME))
 
 from sync_receipt import append_receipt, build_receipt, validate_receipt  # noqa: E402
+from fixture_support import make_portable_fixture  # noqa: E402
 
 
 class SyncReceiptTests(unittest.TestCase):
     def make_project(self) -> Path:
         temp = Path(tempfile.mkdtemp())
-        source = MAP / "fixtures" / "Reasoning-Table"
-        subprocess.run([sys.executable, str(RUNTIME / "build_paper_map.py"), "--project", str(source), "--out", str(temp)], check=True)
-        self.addCleanup(shutil.rmtree, temp, ignore_errors=True)
-        return temp
+        source = make_portable_fixture("Reasoning-Table", temp / "fixture")
+        output = temp / "output"
+        subprocess.run([sys.executable, str(RUNTIME / "build_paper_map.py"), "--project", str(source), "--out", str(output)], check=True)
+        self.addCleanup(shutil.rmtree, output, ignore_errors=True)
+        return output
 
     def run_sync(self, project: Path, payload: list[dict], origin: str = "full_analysis") -> subprocess.CompletedProcess:
         return subprocess.run(
